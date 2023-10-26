@@ -1,0 +1,6 @@
+mantis:
+  protocols:
+    - type: mantis
+      port: 2334
+
+
