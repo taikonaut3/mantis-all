@@ -7,4 +7,5 @@ package io.guthub.astro.mantis.proxy;
 public interface SuperInvoker<R> {
 
     R invoke() throws Throwable;
+
 }

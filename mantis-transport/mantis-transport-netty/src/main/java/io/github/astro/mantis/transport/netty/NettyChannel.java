@@ -1,15 +1,18 @@
 package io.github.astro.mantis.transport.netty;
 
 import io.github.astro.mantis.common.exception.NetWorkException;
-import io.github.astro.mantis.transport.Request;
 import io.github.astro.mantis.transport.channel.AbstractChannel;
 import io.netty.channel.Channel;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.net.InetSocketAddress;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
 public final class NettyChannel extends AbstractChannel {
+
+    private static final Logger logger = LoggerFactory.getLogger(NettyChannel.class);
 
     private static final ConcurrentMap<Channel, NettyChannel> CHANNEL_MAP = new ConcurrentHashMap<>();
 
@@ -58,9 +61,8 @@ public final class NettyChannel extends AbstractChannel {
         if (isActive()) {
             channel.writeAndFlush(message);
         } else {
-            if (message instanceof Request request) {
-                System.out.println(request.getHeader().getExtendData("url"));
-            }
+            logger.warn("Current Channel: {} is not Active", this);
         }
     }
+
 }

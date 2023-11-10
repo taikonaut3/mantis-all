@@ -1,7 +1,7 @@
 package io.github.astro.mantis.spring.cloud;
 
-import io.github.astro.mantis.common.constant.ServiceType;
-import io.github.astro.mantis.configuration.extension.spi.ServiceProviderLoader;
+import io.github.astro.mantis.common.constant.KeyValues;
+import io.github.astro.mantis.configuration.spi.ExtensionLoader;
 import io.github.astro.mantis.governance.directory.Directory;
 import io.github.astro.mantis.spring.cloud.configuration.SpringDiscoveryDirectory;
 import org.springframework.beans.factory.FactoryBean;
@@ -12,7 +12,7 @@ public class SpringDirectoryFactoryBean implements FactoryBean<Directory> {
     private SpringDiscoveryDirectory directory;
 
     public SpringDirectoryFactoryBean(ApplicationContext context) {
-        directory = (SpringDiscoveryDirectory) ServiceProviderLoader.loadService(Directory.class, ServiceType.SPRING);
+        directory = (SpringDiscoveryDirectory) ExtensionLoader.loadService(Directory.class, KeyValues.SPRING);
         directory.setApplicationContext(context);
     }
 
@@ -25,4 +25,5 @@ public class SpringDirectoryFactoryBean implements FactoryBean<Directory> {
     public Class<?> getObjectType() {
         return Directory.class;
     }
+
 }

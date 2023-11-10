@@ -1,12 +1,13 @@
 package io.github.astro.mantis.spring.boot;
 
-import io.github.astro.mantis.configuration.MantisBootStrap;
+import io.github.astro.mantis.configuration.MantisApplication;
 import io.github.astro.mantis.configuration.RemoteCaller;
 import io.github.astro.mantis.spring.rpc.SpringRemoteCaller;
 import jakarta.annotation.Resource;
 import org.springframework.beans.factory.FactoryBean;
 
 public class RemoteCallFactoryBean<T> implements FactoryBean<T> {
+
     private final Class<T> interfaceType;
 
     private volatile RemoteCaller<T> remoteCaller;
@@ -17,8 +18,8 @@ public class RemoteCallFactoryBean<T> implements FactoryBean<T> {
 
     @Resource
     public void setMantisConfigurationProperties(MantisConfigurationProperties properties) {
-        MantisBootStrap mantisBootStrap = properties.getMantisBootStrap();
-        remoteCaller = new SpringRemoteCaller<>(mantisBootStrap, interfaceType);
+        MantisApplication mantisApplication = properties.getMantisBootStrap();
+        remoteCaller = new SpringRemoteCaller<>(mantisApplication, interfaceType);
     }
 
     @Override
@@ -30,4 +31,5 @@ public class RemoteCallFactoryBean<T> implements FactoryBean<T> {
     public Class<?> getObjectType() {
         return interfaceType;
     }
+
 }

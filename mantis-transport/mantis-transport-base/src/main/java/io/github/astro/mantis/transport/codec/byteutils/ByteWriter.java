@@ -1,8 +1,12 @@
 package io.github.astro.mantis.transport.codec.byteutils;
 
+/**
+ * Tool for Writing bytes
+ */
 public interface ByteWriter {
+
     static ByteWriter defaultWriter() {
-        return new SimpleByteWriter();
+        return new DefaultByteWriter();
     }
 
     void writeByte(byte value);

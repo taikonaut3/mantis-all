@@ -4,11 +4,14 @@ import io.github.astro.mantis.transport.channel.ChannelHandler;
 import io.github.astro.mantis.transport.netty.NettyChannel;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
+import io.netty.handler.timeout.IdleState;
+import io.netty.handler.timeout.IdleStateEvent;
 
 @io.netty.channel.ChannelHandler.Sharable
 public final class NettyServerChannelHandler extends ChannelInboundHandlerAdapter {
 
-    private ChannelHandler channelHandler;
+    private final ChannelHandler channelHandler;
+
 
     public NettyServerChannelHandler(ChannelHandler channelHandler) {
         this.channelHandler = channelHandler;
@@ -30,7 +33,6 @@ public final class NettyServerChannelHandler extends ChannelInboundHandlerAdapte
     public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
         NettyChannel nettyChannel = NettyChannel.getChannel(ctx.channel());
         channelHandler.received(nettyChannel, msg);
-
     }
 
     @Override
@@ -39,4 +41,15 @@ public final class NettyServerChannelHandler extends ChannelInboundHandlerAdapte
         channelHandler.caught(nettyChannel, cause);
         NettyChannel.removeChannel(ctx.channel());
     }
+
+    @Override
+    public void userEventTriggered(ChannelHandlerContext ctx, Object evt) throws Exception {
+        NettyChannel nettyChannel = NettyChannel.getChannel(ctx.channel());
+        if (evt instanceof IdleStateEvent event) {
+            if ((event.state() == IdleState.ALL_IDLE) || (event.state() == IdleState.READER_IDLE)) {
+                channelHandler.heartBeat(nettyChannel, evt);
+            }
+        }
+    }
+
 }

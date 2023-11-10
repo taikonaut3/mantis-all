@@ -1,6 +1,6 @@
 package io.github.astro.mantis.common.exception;
 
-public class ConversionException extends RuntimeException {
+public class ConversionException extends RpcException {
 
     public ConversionException(String msg, Throwable e) {
         super(msg, e);
@@ -13,4 +13,5 @@ public class ConversionException extends RuntimeException {
     public ConversionException(Throwable msg) {
         super(msg);
     }
+
 }

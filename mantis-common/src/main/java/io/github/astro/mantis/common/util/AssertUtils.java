@@ -3,6 +3,7 @@ package io.github.astro.mantis.common.util;
 import java.util.Objects;
 
 public interface AssertUtils {
+
     static void assertCondition(boolean condition) {
         assertCondition(condition, null);
     }
@@ -36,4 +37,5 @@ public interface AssertUtils {
             throw new AssertionError(message);
         }
     }
+
 }

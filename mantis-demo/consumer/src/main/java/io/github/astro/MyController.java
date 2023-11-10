@@ -31,13 +31,10 @@ public class MyController {
     public String helloSync(@PathVariable("word") String word) {
         StringBuilder builder = new StringBuilder();
         long start = System.currentTimeMillis();
-        String hello1 = client.hello(word + "1");
-        String hello2 = client.hello(word + "2");
-        String hello3 = client.hello(word + "3");
+        for (int i = 0; i < 1; i++) {
+            builder.append(client.hello(word + +i + i + i)).append("\n");
+        }
         long end = System.currentTimeMillis();
-        builder.append(hello1).append("\n");
-        builder.append(hello2).append("\n");
-        builder.append(hello3).append("\n");
         return builder + "花费的时间：" + (end - start);
     }
 
@@ -45,14 +42,16 @@ public class MyController {
     public String helloAsync(@PathVariable("word") String word) throws ExecutionException, InterruptedException {
         StringBuilder builder = new StringBuilder();
         long start = System.currentTimeMillis();
-        CompletableFuture<String> hello1 = client.helloAsync(word + "1");
-        CompletableFuture<String> hello2 = client.helloAsync(word + "2");
-        CompletableFuture<String> hello3 = client.helloAsync(word + "3");
-        CompletableFuture.allOf(hello1, hello2, hello3);
+        ArrayList<CompletableFuture<String>> completableFutures = new ArrayList<>();
+        for (int i = 0; i < 1; i++) {
+            CompletableFuture<String> future = client.helloAsync(word + i + i + i);
+            completableFutures.add(future);
+        }
+        CompletableFuture.allOf(completableFutures.toArray(CompletableFuture[]::new));
         long end = System.currentTimeMillis();
-        builder.append(hello1.get()).append("\n");
-        builder.append(hello2.get()).append("\n");
-        builder.append(hello3.get()).append("\n");
+        for (CompletableFuture<String> completableFuture : completableFutures) {
+            builder.append(completableFuture.get()).append("\n");
+        }
         return builder + "花费的时间：" + (end - start);
     }
 
@@ -77,10 +76,21 @@ public class MyController {
             parent.setChild(child);
             parentObjects.add(parent);
         }
+        long start = System.currentTimeMillis();
         try {
             return client.getParents(parentObjects, parentObjects).get();
         } catch (InterruptedException | ExecutionException e) {
             throw new RuntimeException(e);
+        }finally {
+            long end = System.currentTimeMillis();
+            System.out.println("花费时间："+(end-start));
         }
     }
+
+    @RequestMapping("oneWay")
+    public String oneWay() {
+        client.testOneWay("1111111");
+        return "success";
+    }
+
 }

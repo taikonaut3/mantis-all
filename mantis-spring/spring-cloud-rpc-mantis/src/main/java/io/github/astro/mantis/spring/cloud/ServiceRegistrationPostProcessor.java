@@ -23,4 +23,5 @@ public class ServiceRegistrationPostProcessor implements BeanPostProcessor, Bean
         }
         return BeanPostProcessor.super.postProcessAfterInitialization(bean, beanName);
     }
+
 }

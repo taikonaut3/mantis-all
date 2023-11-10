@@ -1,10 +1,10 @@
 package io.github.astro.mantis.governance.directory;
 
 import io.github.astro.mantis.common.util.CollectionUtils;
+import io.github.astro.mantis.configuration.CallData;
 import io.github.astro.mantis.configuration.URL;
-import io.github.astro.mantis.configuration.extension.spi.ServiceProvider;
-import io.github.astro.mantis.configuration.extension.spi.ServiceProviderLoader;
-import io.github.astro.mantis.configuration.invoke.Invocation;
+import io.github.astro.mantis.configuration.spi.ExtensionLoader;
+import io.github.astro.mantis.configuration.spi.ServiceProvider;
 import io.github.astro.mantis.registry.Registry;
 import io.github.astro.mantis.registry.RegistryFactory;
 import org.slf4j.Logger;
@@ -14,7 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-import static io.github.astro.mantis.common.constant.ServiceType.Directory.DEFAULT;
+import static io.github.astro.mantis.common.constant.KeyValues.Directory.DEFAULT;
 
 /**
  * must open mantis-registry
@@ -25,19 +25,20 @@ public class DefaultDirectory implements Directory {
     private static final Logger logger = LoggerFactory.getLogger(DefaultDirectory.class);
 
     @Override
-    public List<URL> list(Invocation invocation, URL... urls) {
+    public List<URL> list(CallData callData, URL... urls) {
         logger.debug("director......");
-        ArrayList<URL> exporterUrls = new ArrayList<>();
+        ArrayList<URL> remoteServiceUrls = new ArrayList<>();
         for (URL url : urls) {
-            RegistryFactory registryFactory = ServiceProviderLoader.loadService(RegistryFactory.class, url.getProtocol());
+            RegistryFactory registryFactory = ExtensionLoader.loadService(RegistryFactory.class, url.getProtocol());
             Registry registry = registryFactory.getRegistry(url);
-            CollectionUtils.addToList(exporterUrls, (existUrl, newUrl) -> Objects.equals(existUrl.getAddress(), newUrl.getAddress()), registry.discover(invocation));
+            CollectionUtils.addToList(remoteServiceUrls, (existUrl, newUrl) -> Objects.equals(existUrl.getAddress(), newUrl.getAddress()), registry.discover(callData));
         }
-        return exporterUrls;
+        return remoteServiceUrls;
     }
 
     @Override
     public void destroy() {
 
     }
+
 }

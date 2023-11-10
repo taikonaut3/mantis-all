@@ -13,4 +13,5 @@ public class CodecException extends NetWorkException {
     public CodecException(Throwable msg) {
         super(msg);
     }
+
 }

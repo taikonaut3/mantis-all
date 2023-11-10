@@ -1,7 +1,7 @@
 package io.github.astro.mantis.spring.boot.processor;
 
-import io.github.astro.mantis.configuration.MantisBootStrap;
-import io.github.astro.mantis.configuration.ProtocolConfig;
+import io.github.astro.mantis.configuration.MantisApplication;
+import io.github.astro.mantis.configuration.config.ProtocolConfig;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.config.BeanFactoryPostProcessor;
@@ -20,9 +20,9 @@ public class ProtocolConfigPostProcessor implements BeanFactoryPostProcessor, Be
     @Override
     public Object postProcessAfterInitialization(Object bean, String beanName) throws BeansException {
         if (bean instanceof ProtocolConfig config) {
-            MantisBootStrap mantisBootStrap = beanFactory.getBean(MantisBootStrap.class);
+            MantisApplication mantisApplication = beanFactory.getBean(MantisApplication.class);
             config.setName(beanName);
-            mantisBootStrap.addProtocolConfig(config);
+            mantisApplication.addProtocolConfig(config);
         }
         return bean;
     }

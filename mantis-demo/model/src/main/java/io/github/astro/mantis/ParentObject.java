@@ -3,7 +3,9 @@ package io.github.astro.mantis;
 import java.io.Serializable;
 
 public class ParentObject implements Serializable {
+
     private String someValue;
+
     private ChildObject child;
 
     // getters 和 setters
@@ -23,5 +25,6 @@ public class ParentObject implements Serializable {
     public void setChild(ChildObject child) {
         this.child = child;
     }
+
 }
 

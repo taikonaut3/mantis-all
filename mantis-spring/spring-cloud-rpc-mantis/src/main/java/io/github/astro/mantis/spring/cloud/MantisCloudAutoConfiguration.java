@@ -15,9 +15,4 @@ public class MantisCloudAutoConfiguration {
         return new SpringDirectoryFactoryBean(context);
     }
 
-//    @Bean
-//    @ConditionalOnClass({ConsulAutoServiceRegistration.class})
-//    public DiscoveryController discoveryController() {
-//        return new DiscoveryController();
-//    }
 }

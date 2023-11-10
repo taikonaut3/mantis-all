@@ -1,6 +1,7 @@
 package io.github.astro.mantis.common.exception;
 
-public class SerializationException extends RuntimeException {
+public class SerializationException extends RpcException {
+
     public SerializationException(String msg, Throwable e) {
         super(msg, e);
     }
@@ -12,4 +13,5 @@ public class SerializationException extends RuntimeException {
     public SerializationException(Throwable msg) {
         super(msg);
     }
+
 }

@@ -1,7 +1,7 @@
 package io.github.astro.mantis.spring.boot.processor;
 
-import io.github.astro.mantis.configuration.MantisBootStrap;
-import io.github.astro.mantis.configuration.RegistryConfig;
+import io.github.astro.mantis.configuration.MantisApplication;
+import io.github.astro.mantis.configuration.config.RegistryConfig;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.config.BeanFactoryPostProcessor;
@@ -20,10 +20,11 @@ public class RegistryConfigPostProcessor implements BeanFactoryPostProcessor, Be
     @Override
     public Object postProcessAfterInitialization(Object bean, String beanName) throws BeansException {
         if (bean instanceof RegistryConfig config) {
-            MantisBootStrap mantisBootStrap = beanFactory.getBean(MantisBootStrap.class);
+            MantisApplication mantisApplication = beanFactory.getBean(MantisApplication.class);
             config.setName(beanName);
-            mantisBootStrap.addRegistryConfig(config);
+            mantisApplication.addRegistryConfig(config);
         }
         return bean;
     }
+
 }

@@ -1,9 +1,9 @@
 package io.github.astro.mantis.transport.header;
 
 import io.github.astro.mantis.common.constant.Key;
-import io.github.astro.mantis.common.constant.MessageType;
-import io.github.astro.mantis.common.constant.SerializerType;
-import io.github.astro.mantis.configuration.extension.spi.ServiceProviderLoader;
+import io.github.astro.mantis.common.constant.Mode;
+import io.github.astro.mantis.common.constant.ModeContainer;
+import io.github.astro.mantis.configuration.spi.ExtensionLoader;
 import io.github.astro.mantis.serialization.Serializer;
 
 import java.util.Map;
@@ -12,9 +12,11 @@ public interface Header {
 
     int getLength();
 
-    MessageType getMessageType();
+    int getAllowMaxSize();
 
-    String getProtocolVersion();
+    Mode getEnvelopeMode();
+
+    Mode getProtocolMode();
 
     Map<String, String> getExtendsData();
 
@@ -24,16 +26,18 @@ public interface Header {
 
     String getExtendData(String key);
 
-    byte[] toBytes();
+    byte[] fixDataToBytes();
 
-    default SerializerType getSerializerType() {
+    byte[] extendDataToBytes();
+
+    default Mode getSerializerMode() {
         String serial = getExtendData(Key.SERIALIZE);
-        return SerializerType.get(serial);
+        return ModeContainer.getMode(Key.SERIALIZE, serial);
     }
 
     default Serializer getSerializer() {
         String serial = getExtendData(Key.SERIALIZE);
-        return ServiceProviderLoader.loadService(Serializer.class, serial);
+        return ExtensionLoader.loadService(Serializer.class, serial);
     }
 
 }

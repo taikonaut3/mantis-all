@@ -4,10 +4,16 @@ import io.github.astro.mantis.common.exception.NetWorkException;
 
 public interface Closeable {
 
+    /**
+     * Close Resource
+     *
+     * @throws NetWorkException
+     */
     void close() throws NetWorkException;
 
     /**
-     * 判断当前通道是否处于活动状态（能否读写），以便在通道不活跃时进行处理
+     * Whether the Current Channel is Active (can read or write)
+     * for processing when the channel is inactive
      *
      * @return
      */

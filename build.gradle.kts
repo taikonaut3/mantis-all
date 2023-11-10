@@ -12,11 +12,12 @@ configure<DependencyManagementExtension> {
     dependency("com.lmax:disruptor", "3.4.4")
     dependency("net.bytebuddy:byte-buddy", "1.14.4")
     dependency("com.esotericsoftware:kryo", "5.5.0")
-    dependency("org.furyio:fury-core", "0.1.0-alpha.2")
+    dependency("org.furyio:fury-core", "0.3.0")
     dependency("org.slf4j:slf4j-api", "2.0.7")
     dependency("ch.qos.logback:logback-classic", "1.4.6")
     dependency("org.projectlombok:lombok", "1.18.28")
     dependency("com.ecwid.consul:consul-api", "1.4.5")
+    dependency("net.bytebuddy:byte-buddy","1.14.9")
     version(Common.SB, "3.0.9")
     version(Common.SC, "2022.0.4")
 }

@@ -4,12 +4,6 @@ public interface Source {
 
     String getApplicationName();
 
-    default void setApplicationName(String applicationName) {
-    }
-
-    String getExportName();
-
-    default void setExportName(String exportName) {
-    }
+    String getRemoteServiceName();
 
 }

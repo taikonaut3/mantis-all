@@ -14,13 +14,13 @@ import java.util.List;
 public class MantisPostProcessorRegister implements ImportBeanDefinitionRegistrar {
 
     private final static List<Class<?>> SCAN_POSTPROCESSORS = List.of(
-            ExportPostProcessor.class,
-            RemoteCallPostProcessor.class
+            RemoteServicePostProcessor.class,
+            RemoteCallerPostProcessor.class
     );
 
     private final static List<Class<?>> GENERAL_POSTPROCESSORS = List.of(
-            MantisBootStrapPostProcessor.class,
-            InvokeProcessorPostProcessor.class,
+            MantisApplicationPostProcessor.class,
+            CallInterceptorPostProcessor.class,
             ProtocolConfigPostProcessor.class,
             RegistryConfigPostProcessor.class
     );
@@ -49,4 +49,5 @@ public class MantisPostProcessorRegister implements ImportBeanDefinitionRegistra
             BeanDefinitionReaderUtils.registerWithGeneratedName(beanDefinition, registry);
         }
     }
+
 }

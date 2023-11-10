@@ -4,9 +4,8 @@ import io.github.astro.mantis.configuration.extension.AbstractAccessor;
 
 public abstract class AbstractEvent<S> extends AbstractAccessor<Object> implements Event<S> {
 
-    protected EventType type;
-
     protected S data;
+
     protected volatile boolean propagation = false;
 
     public AbstractEvent() {
@@ -15,16 +14,6 @@ public abstract class AbstractEvent<S> extends AbstractAccessor<Object> implemen
 
     public AbstractEvent(S data) {
         this.data = data;
-    }
-
-    public AbstractEvent(S data, EventType type) {
-        this.data = data;
-        this.type = type;
-    }
-
-    @Override
-    public EventType getType() {
-        return type;
     }
 
     @Override
@@ -52,4 +41,5 @@ public abstract class AbstractEvent<S> extends AbstractAccessor<Object> implemen
     public boolean isPropagationStopped() {
         return propagation;
     }
+
 }

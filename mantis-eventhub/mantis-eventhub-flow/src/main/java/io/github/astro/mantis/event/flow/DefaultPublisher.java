@@ -7,8 +7,11 @@ import java.util.concurrent.atomic.AtomicBoolean;
 public class DefaultPublisher<T> implements Flow.Publisher<T> {
 
     private final ConcurrentMap<Flow.Subscriber<? super T>, StandardSubscription<T>> subscriptions = new ConcurrentHashMap<>();
+
     private final AtomicBoolean isShutdown = new AtomicBoolean(false);
+
     private Executor executor;
+
     private Queue<T> items = new ConcurrentLinkedQueue<>();
 
     public DefaultPublisher(Executor executor) {
@@ -97,8 +100,11 @@ public class DefaultPublisher<T> implements Flow.Publisher<T> {
     private static class StandardSubscription<T> implements Flow.Subscription {
 
         private final Flow.Subscriber<? super T> subscriber;
+
         private final DefaultPublisher<T> publisher;
+
         private long demand;
+
         private boolean cancelled;
 
         private StandardSubscription(Flow.Subscriber<? super T> subscriber, DefaultPublisher<T> publisher) {
@@ -150,5 +156,7 @@ public class DefaultPublisher<T> implements Flow.Publisher<T> {
                 subscriber.onComplete();
             }
         }
+
     }
+
 }

@@ -1,1 +1,1 @@
-io.github.astro.mantis.configuration.extension.spi.SpiExtensionProcessor
+io.github.astro.mantis.configuration.spi.ExtensionLoaderAnnotationProcessor

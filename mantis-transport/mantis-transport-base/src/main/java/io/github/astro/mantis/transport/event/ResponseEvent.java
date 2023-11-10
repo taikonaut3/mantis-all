@@ -1,11 +1,11 @@
 package io.github.astro.mantis.transport.event;
 
-import io.github.astro.mantis.event.EventType;
 import io.github.astro.mantis.transport.Response;
 
 public class ResponseEvent extends EnvelopeEvent<Response> {
 
     public ResponseEvent(Response response) {
-        super(response, EventType.Response);
+        super(response);
     }
+
 }

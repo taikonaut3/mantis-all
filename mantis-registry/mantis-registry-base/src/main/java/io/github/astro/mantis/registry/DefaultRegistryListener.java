@@ -9,6 +9,7 @@ import java.util.Map;
 public class DefaultRegistryListener implements RegistryListener {
 
     private static final Logger logger = LoggerFactory.getLogger(DefaultRegistryListener.class);
+
     private final Map<String, URL> discoverServices;
 
     public DefaultRegistryListener(Map<String, URL> discoverServices) {
@@ -29,4 +30,5 @@ public class DefaultRegistryListener implements RegistryListener {
     public void listenCreated(URL url) {
 
     }
+
 }

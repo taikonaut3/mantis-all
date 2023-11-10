@@ -6,9 +6,13 @@ import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class MantisThreadFactory implements ThreadFactory {
+
     private final AtomicInteger threadNumber = new AtomicInteger(1);
+
     private final ThreadExceptionHandler threadExceptionHandler = new ThreadExceptionHandler();
+
     private final String namePrefix;
+
     private final boolean isDaemon;
 
     public MantisThreadFactory(String namePrefix, boolean isDaemon) {
@@ -29,4 +33,5 @@ public class MantisThreadFactory implements ThreadFactory {
         t.setDaemon(isDaemon);
         return t;
     }
+
 }

@@ -1,6 +1,6 @@
 package io.github.astro.mantis.spring.boot;
 
-import io.github.astro.mantis.configuration.MantisBootStrap;
+import io.github.astro.mantis.configuration.MantisApplication;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 
@@ -8,8 +8,8 @@ import org.springframework.context.annotation.Bean;
 public class MantisAutoConfiguration {
 
     @Bean
-    public MantisBootStrap mantisBootStrap() {
-        return new MantisBootStrap();
+    public MantisApplication mantisBootStrap() {
+        return new MantisApplication();
     }
 
     @Bean
@@ -23,8 +23,8 @@ public class MantisAutoConfiguration {
     }
 
 //    @Bean
-//    public MonitorExporter monitorExporter(MantisBootStrap mantisBootStrap) {
-//        return new MonitorExporter(mantisBootStrap);
+//    public MonitorremoteService monitorremoteService(MantisBootStrap mantisBootStrap) {
+//        return new MonitorremoteService(mantisBootStrap);
 //    }
 
 }

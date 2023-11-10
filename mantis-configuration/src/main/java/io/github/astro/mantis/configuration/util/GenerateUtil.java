@@ -1,10 +1,9 @@
 package io.github.astro.mantis.configuration.util;
 
 import io.github.astro.mantis.common.constant.Key;
-import io.github.astro.mantis.common.constant.ProtocolType;
-import io.github.astro.mantis.configuration.ConsumerInvoker;
+import io.github.astro.mantis.configuration.CallData;
+import io.github.astro.mantis.configuration.ConsumerCaller;
 import io.github.astro.mantis.configuration.URL;
-import io.github.astro.mantis.configuration.invoke.Invocation;
 
 import java.lang.reflect.Method;
 import java.lang.reflect.Type;
@@ -18,9 +17,9 @@ public interface GenerateUtil {
         return url.pathsToString() + "/" + url.getProtocol();
     }
 
-    static String generateKey(Invocation invocation) {
-        ConsumerInvoker invoker = (ConsumerInvoker) invocation.getInvoker();
-        return "/" + invocation.getApplicationName() + "/" + invocation.getExportName() + "/" + invocation.getMethodKey() + "/" + invoker.getProtocol().getName();
+    static String generateKey(CallData data) {
+        ConsumerCaller caller = (ConsumerCaller) data.getCaller();
+        return "/" + caller.getApplicationName() + "/" + caller.getRemoteServiceName() + "/" + caller.getCallName() + "/" + caller.getProtocol().name();
     }
 
     static String generateKey(Method method) {
@@ -42,7 +41,8 @@ public interface GenerateUtil {
         return builder.toString();
     }
 
-    static String generateMetaProtocolKey(ProtocolType protocolType) {
-        return Key.PROTOCOL_PREFIX + protocolType.getName();
+    static String generateMetaProtocolKey(String protocol) {
+        return Key.PROTOCOL_PREFIX + protocol;
     }
+
 }

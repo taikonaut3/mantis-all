@@ -22,7 +22,7 @@ subprojects {
                     val dependencies = depNodes[0] as Node
                     dependencies.children().clear()
                     val configuration = configurations["runtimeClasspath"]
-                    configuration.allDependencies.forEach{ dep ->
+                    configuration.allDependencies.forEach { dep ->
                         if (dep is DefaultProjectDependency) {
                             if (configuration.excludeRules.isEmpty()) {
                                 val dependencyNode = dependencies.appendNode("dependency")
@@ -30,7 +30,7 @@ subprojects {
                                 dependencyNode.appendNode("artifactId", dep.name)
                                 dependencyNode.appendNode("version", version)
                                 dependencyNode.appendNode("scope", "compile")
-                            }else{
+                            } else {
                                 configuration.excludeRules.forEach {
                                     if (it.group != dep.group && it.module != dep.name) {
                                         val dependencyNode = dependencies.appendNode("dependency")

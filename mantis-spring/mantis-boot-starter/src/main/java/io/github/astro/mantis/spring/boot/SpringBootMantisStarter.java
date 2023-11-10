@@ -1,6 +1,6 @@
 package io.github.astro.mantis.spring.boot;
 
-import io.github.astro.mantis.configuration.MantisBootStrap;
+import io.github.astro.mantis.configuration.MantisApplication;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
 
@@ -11,7 +11,8 @@ public class SpringBootMantisStarter implements ApplicationListener<ContextRefre
 
     @Override
     public void onApplicationEvent(ContextRefreshedEvent event) {
-        MantisBootStrap mantisBootStrap = event.getApplicationContext().getBean(MantisBootStrap.class);
-        mantisBootStrap.start();
+        MantisApplication mantisApplication = event.getApplicationContext().getBean(MantisApplication.class);
+        mantisApplication.start();
     }
+
 }

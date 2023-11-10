@@ -1,7 +1,7 @@
 package io.github.astro.mantis.serialization.jdk;
 
 import io.github.astro.mantis.common.exception.SerializationException;
-import io.github.astro.mantis.configuration.extension.spi.ServiceProvider;
+import io.github.astro.mantis.configuration.spi.ServiceProvider;
 import io.github.astro.mantis.serialization.Serializer;
 
 import java.io.ByteArrayInputStream;
@@ -9,7 +9,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 
-import static io.github.astro.mantis.common.constant.ServiceType.Serializer.JDK;
+import static io.github.astro.mantis.common.constant.KeyValues.Serialize.JDK;
 
 @ServiceProvider(value = JDK, interfaces = {Serializer.class})
 public class JdkSerializer implements Serializer {
@@ -35,4 +35,5 @@ public class JdkSerializer implements Serializer {
             throw new SerializationException(e);
         }
     }
+
 }

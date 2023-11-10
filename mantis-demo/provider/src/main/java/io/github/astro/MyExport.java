@@ -1,30 +1,33 @@
 package io.github.astro;
 
 import io.github.astro.mantis.ParentObject;
-import io.github.astro.mantis.configuration.MantisBootStrap;
-import io.github.astro.mantis.configuration.annotation.Export;
-import io.github.astro.mantis.configuration.annotation.Procedure;
+import io.github.astro.mantis.common.constant.KeyValues;
+import io.github.astro.mantis.configuration.MantisApplication;
+import io.github.astro.mantis.configuration.annotation.Callable;
+import io.github.astro.mantis.configuration.annotation.Option;
+import io.github.astro.mantis.configuration.annotation.RemoteService;
 import jakarta.annotation.Resource;
 
 import java.util.List;
 
-@Export(value = "textExportConfig")
+@RemoteService("myExport")
 public class MyExport {
 
     @Resource
-    private MantisBootStrap mantisBootStrap;
+    private MantisApplication mantisApplication;
 
     private int i = 0;
 
-    @Procedure("hello")
+    @Callable
     public String hello(String word) {
-//        if(i++<3){
-//            int i = 1/0;
-//        }
+        System.out.println("----------------------->" + i);
+        if (i++ < 3) {
+            int i = 1 / 0;
+        }
         return "hello" + word;
     }
 
-    @Procedure
+    @Callable
     public String helloAsync(String word) {
 //        try {
 //            Thread.sleep(6000);
@@ -34,8 +37,13 @@ public class MyExport {
         return "hello async" + word;
     }
 
-    @Procedure(value = "getParents", processors = {"test"})
+    @Callable(option = @Option(serialize = KeyValues.Serialize.KRYO))
     List<ParentObject> getParents(List<ParentObject> parentObjects, List<ParentObject> parentObjects2) {
+//        try {
+//            Thread.sleep(6000);
+//        } catch (InterruptedException e) {
+//            throw new RuntimeException(e);
+//        }
         return parentObjects;
     }
 

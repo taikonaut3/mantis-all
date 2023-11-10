@@ -15,4 +15,5 @@ public @interface EnableMantis {
     String[] callsScan() default {};
 
     String[] exportsScan() default {};
+
 }

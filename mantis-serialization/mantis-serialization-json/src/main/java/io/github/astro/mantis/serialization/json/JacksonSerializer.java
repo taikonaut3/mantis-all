@@ -5,13 +5,13 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.json.JsonMapper;
 import io.github.astro.mantis.common.exception.ConversionException;
 import io.github.astro.mantis.common.exception.SerializationException;
-import io.github.astro.mantis.configuration.extension.spi.ServiceProvider;
+import io.github.astro.mantis.configuration.spi.ServiceProvider;
 import io.github.astro.mantis.serialization.Serializer;
 
 import java.io.IOException;
 import java.lang.reflect.Type;
 
-import static io.github.astro.mantis.common.constant.ServiceType.Serializer.JSON;
+import static io.github.astro.mantis.common.constant.KeyValues.Serialize.JSON;
 
 @ServiceProvider(JSON)
 public class JacksonSerializer implements Serializer {
@@ -65,4 +65,5 @@ public class JacksonSerializer implements Serializer {
     public Object convert(Object arg, Type type) throws ConversionException {
         return objectMapper.convertValue(arg, objectMapper.constructType(type));
     }
+
 }

@@ -2,9 +2,9 @@ package io.github.astro.mantis.spring.boot;
 
 import io.github.astro.mantis.common.constant.ConfigScope;
 import io.github.astro.mantis.common.util.StringUtils;
-import io.github.astro.mantis.configuration.MantisBootStrap;
-import io.github.astro.mantis.configuration.ProtocolConfig;
-import io.github.astro.mantis.configuration.RegistryConfig;
+import io.github.astro.mantis.configuration.MantisApplication;
+import io.github.astro.mantis.configuration.config.ProtocolConfig;
+import io.github.astro.mantis.configuration.config.RegistryConfig;
 import jakarta.annotation.Resource;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
@@ -15,14 +15,14 @@ import java.util.stream.Collectors;
 public class MantisConfigurationProperties {
 
     @Resource
-    private MantisBootStrap mantisBootStrap;
+    private MantisApplication mantisApplication;
 
     public MantisConfigurationProperties() {
 
     }
 
     public List<ProtocolConfig> getProtocols() {
-        return mantisBootStrap.getConfigurationManager().getProtocolManager().getManagerMap().values().stream().
+        return mantisApplication.getConfigurationManager().getProtocolManager().getManagerMap().values().stream().
                 filter(protocolConfig -> protocolConfig.getScope() == ConfigScope.APPLICATION)
                 .collect(Collectors.toList());
     }
@@ -33,12 +33,12 @@ public class MantisConfigurationProperties {
                 configuration.setName("Global-" + configuration.toUrl().getAuthority());
             }
             configuration.setScope(ConfigScope.APPLICATION);
-            mantisBootStrap.addProtocolConfig(configuration);
+            mantisApplication.addProtocolConfig(configuration);
         }
     }
 
     public List<RegistryConfig> getRegistries() {
-        return mantisBootStrap.getConfigurationManager().getRegistryManager().getManagerMap().values().stream().
+        return mantisApplication.getConfigurationManager().getRegistryManager().getManagerMap().values().stream().
                 filter(registryConfig -> registryConfig.getScope() == ConfigScope.APPLICATION)
                 .collect(Collectors.toList());
     }
@@ -50,28 +50,28 @@ public class MantisConfigurationProperties {
                 configuration.setEnabled(true);
             }
             configuration.setScope(ConfigScope.APPLICATION);
-            mantisBootStrap.addRegistryConfig(configuration);
+            mantisApplication.addRegistryConfig(configuration);
         }
     }
 
     public int getWeight() {
-        return mantisBootStrap.getWeight();
+        return mantisApplication.getWeight();
     }
 
     public void setWeight(int weight) {
-        mantisBootStrap.setWeight(weight);
+        mantisApplication.setWeight(weight);
     }
 
     public String getApplicationName() {
-        return mantisBootStrap.getApplicationName();
+        return mantisApplication.getApplicationName();
     }
 
     public void setApplicationName(String applicationName) {
-        mantisBootStrap.setApplicationName(applicationName);
+        mantisApplication.setApplicationName(applicationName);
     }
 
-    public MantisBootStrap getMantisBootStrap() {
-        return mantisBootStrap;
+    public MantisApplication getMantisBootStrap() {
+        return mantisApplication;
     }
 
 }

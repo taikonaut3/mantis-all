@@ -1,23 +1,26 @@
 package io.github.astro.mantis.transport.event;
 
-import io.github.astro.mantis.configuration.MantisBootStrap;
-import io.github.astro.mantis.event.AbstractEventListener;
+import io.github.astro.mantis.configuration.MantisApplication;
+import io.github.astro.mantis.event.EventListener;
 
 import java.util.concurrent.Executor;
 
-public abstract class EnvelopeEventListener<T extends EnvelopeEvent<?>> extends AbstractEventListener<T> {
+public abstract class EnvelopeEventListener<T extends EnvelopeEvent<?>> implements EventListener<T> {
 
-    protected MantisBootStrap mantisBootStrap;
+    protected MantisApplication mantisApplication;
 
-    public EnvelopeEventListener(Executor executor, MantisBootStrap mantisBootStrap) {
-        super(executor);
-        this.mantisBootStrap = mantisBootStrap;
+    protected Executor executor;
+
+    public EnvelopeEventListener(Executor executor, MantisApplication mantisApplication) {
+        this.executor = executor;
+        this.mantisApplication = mantisApplication;
     }
 
     @Override
-    protected void handleEvent(T event) {
-        handEnvelopeEvent(event);
+    public void onEvent(T event) {
+        executor.execute(() -> handEnvelopeEvent(event));
     }
 
     protected abstract void handEnvelopeEvent(T event);
+
 }

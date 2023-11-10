@@ -1,13 +1,15 @@
 package io.github.astro.mantis.transport.netty.client;
 
 import io.github.astro.mantis.common.constant.Constant;
+import io.github.astro.mantis.common.constant.Key;
 import io.github.astro.mantis.common.exception.ConnectException;
 import io.github.astro.mantis.common.exception.NetWorkException;
 import io.github.astro.mantis.configuration.URL;
-import io.github.astro.mantis.transport.channel.ChannelHandler;
+import io.github.astro.mantis.transport.channel.ChannelHandlerChain;
 import io.github.astro.mantis.transport.client.AbstractClient;
 import io.github.astro.mantis.transport.codec.Codec;
 import io.github.astro.mantis.transport.netty.NettyChannel;
+import io.github.astro.mantis.transport.netty.NettyIdeStateHandler;
 import io.github.astro.mantis.transport.netty.codec.NettyCodec;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.buffer.PooledByteBufAllocator;
@@ -18,9 +20,12 @@ import io.netty.channel.ChannelOption;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioSocketChannel;
+import io.netty.handler.timeout.IdleStateHandler;
 import io.netty.util.concurrent.DefaultThreadFactory;
 
 import java.util.concurrent.TimeUnit;
+
+import static io.github.astro.mantis.common.constant.Constant.*;
 
 public final class NettyClient extends AbstractClient {
 
@@ -30,20 +35,22 @@ public final class NettyClient extends AbstractClient {
 
     private Channel channel;
 
-    public NettyClient(URL url, ChannelHandler channelHandler, Codec codec) throws ConnectException {
+    public NettyClient(URL url, ChannelHandlerChain channelHandler, Codec codec) throws ConnectException {
         super(url, channelHandler, codec);
     }
 
     @Override
     protected void init() throws ConnectException {
         bootstrap = new Bootstrap();
+        int configTimeout = url.getIntParameter(Key.CONNECT_TIMEOUT, DEFAULT_CONNECT_TIMEOUT);
+        connectTimeout = Math.min(configTimeout, DEFAULT_MAX_CONNECT_TIMEOUT);
         final NettyClientChannelHandler handler = new NettyClientChannelHandler(channelHandler);
         initBootStrap(handler);
     }
 
-    private void initBootStrap(io.netty.channel.ChannelHandler handler) {
+    private void initBootStrap(NettyClientChannelHandler handler) {
         bootstrap.group(nioEventLoopGroup)
-                .option(ChannelOption.CONNECT_TIMEOUT_MILLIS, Math.min(connectTimeout, 3000))
+                .option(ChannelOption.CONNECT_TIMEOUT_MILLIS, connectTimeout)
                 .option(ChannelOption.SO_KEEPALIVE, true)
                 .option(ChannelOption.TCP_NODELAY, true)
                 .option(ChannelOption.ALLOCATOR, PooledByteBufAllocator.DEFAULT)
@@ -51,10 +58,13 @@ public final class NettyClient extends AbstractClient {
                 .handler(new ChannelInitializer<SocketChannel>() {
                     @Override
                     protected void initChannel(SocketChannel ch) throws Exception {
-                        NettyCodec nettyCodec = new NettyCodec(codec);
+                        NettyCodec nettyCodec = new NettyCodec(url, codec);
+                        int heartbeatInterval = url.getIntParameter(Key.HEARTBEAT_INTERVAL, DEFAULT_HEARTBEAT_INTERVAL);
+                        IdleStateHandler idleStateHandler = NettyIdeStateHandler.createClientIdleStateHandler(heartbeatInterval);
                         ch.pipeline()
                                 .addLast("decoder", nettyCodec.getDecoder())
                                 .addLast("encoder", nettyCodec.getEncoder())
+                                .addLast("heartbeat", idleStateHandler)
                                 .addLast("handler", handler);
                     }
                 });
@@ -86,7 +96,7 @@ public final class NettyClient extends AbstractClient {
 
     @Override
     public boolean isActive() {
-        return channel.isActive();
+        return channel != null && channel.isActive();
     }
 
 }

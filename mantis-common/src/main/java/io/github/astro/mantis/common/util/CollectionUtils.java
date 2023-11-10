@@ -17,4 +17,5 @@ public interface CollectionUtils {
             collection.add(item);
         }
     }
+
 }

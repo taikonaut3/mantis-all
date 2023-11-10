@@ -4,13 +4,13 @@ object Common {
 
     const val DM = "dependencyManagement"
 
-    const val S ="spring"
+    const val S = "spring"
 
     const val SB = "springBoot"
 
     const val SC = "springCloud"
 
-    const val MV ="mantis.version"
+    const val MV = "mantis.version"
 
     // 所有子项目通用的模块
     val commonModules = listOf("mantis-common", "mantis-configuration")

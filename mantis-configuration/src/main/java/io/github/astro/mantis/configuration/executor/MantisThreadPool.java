@@ -37,4 +37,5 @@ public class MantisThreadPool extends ThreadPoolExecutor {
     public static ExecutorService getDefaultCPUExecutor(String namePrefix) {
         return new MantisThreadPool(Constant.DEFAULT_CPU_THREADS, Constant.DEFAULT_CPU_MAX_THREADS, namePrefix);
     }
+
 }

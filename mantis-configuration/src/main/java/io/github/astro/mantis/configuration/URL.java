@@ -1,32 +1,37 @@
 package io.github.astro.mantis.configuration;
 
-import io.github.astro.mantis.common.constant.Key;
 import io.github.astro.mantis.common.exception.SourceException;
-import io.github.astro.mantis.common.util.DateUtils;
-import io.github.astro.mantis.common.util.MapUtils;
 import io.github.astro.mantis.common.util.NetUtils;
 import io.github.astro.mantis.common.util.StringUtils;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.net.InetSocketAddress;
-import java.time.LocalDateTime;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * Basic for:
- * 1、Rpc Request:
- *
- * @see ExporterURL
- * 2、Connect Third Party Middleware
+ * 1、Rpc Request: {@link RemoteUrl}
+ * 2、Connect to Third Party Middleware
  */
 public class URL {
 
     private final List<String> paths;
+
+    @Getter
     private final Map<String, String> parameters;
+
+    @Getter
+    @Setter
     private String host;
+
+    @Getter
+    @Setter
     private int port;
+
+    @Getter
+    @Setter
     private String protocol;
 
     public URL() {
@@ -44,8 +49,6 @@ public class URL {
         this.protocol = protocol;
         this.host = address.getHostString();
         this.port = address.getPort();
-        String timestamp = DateUtils.format(LocalDateTime.now(), "yyyyMMddHHmmss");
-        addParameter(Key.TIMESTAMP, timestamp);
     }
 
     public URL(String protocol, String address) {
@@ -85,25 +88,24 @@ public class URL {
         }
         if (strings.length > 1) {
             String params = strings[1];
-            urlObj.addParameters(MapUtils.paramsToMap(params));
+            urlObj.addParameters(urlStringToMap(params));
         }
         return urlObj;
     }
 
-    public String getHost() {
-        return host;
+    public static String mapToUrlString(Map<String, String> parameters) {
+        return parameters.entrySet().stream()
+                .map(entry -> entry.getKey() + "=" + entry.getValue())
+                .collect(Collectors.joining("&"));
     }
 
-    public void setHost(String ip) {
-        this.host = ip;
-    }
-
-    public int getPort() {
-        return port;
-    }
-
-    public void setPort(int port) {
-        this.port = port;
+    public static Map<String, String> urlStringToMap(String params) {
+        return Arrays.stream(params.split("&"))
+                .map(param -> param.split("="))
+                .collect(Collectors.toMap(
+                        split -> split[0],
+                        split -> split[1]
+                ));
     }
 
     public String getAddress() {
@@ -117,14 +119,6 @@ public class URL {
         InetSocketAddress inetSocketAddress = NetUtils.toInetSocketAddress(address);
         this.host = inetSocketAddress.getHostString();
         this.port = inetSocketAddress.getPort();
-    }
-
-    public String getProtocol() {
-        return protocol;
-    }
-
-    public void setProtocol(String protocol) {
-        this.protocol = protocol;
     }
 
     public void addPath(String path) {
@@ -161,20 +155,30 @@ public class URL {
         return Boolean.parseBoolean(getParameter(key));
     }
 
+    public boolean getBooleanParameter(String key, boolean defaultValue) {
+        String value = getParameter(key);
+        return StringUtils.isBlank(value) ? defaultValue : Boolean.parseBoolean(value);
+    }
+
     public int getIntParameter(String key) {
         return Integer.parseInt(getParameter(key));
+    }
+
+    public int getIntParameter(String key, int defaultValue) {
+        String value = getParameter(key);
+        return StringUtils.isBlank(value) ? defaultValue : Integer.parseInt(value);
     }
 
     public long getLongParameter(String key) {
         return Long.parseLong(getParameter(key));
     }
 
-    public Map<String, String> getParameters() {
-        return parameters;
-    }
-
     public void removeParameter(String key) {
         parameters.remove(key);
+    }
+
+    public String getAuthority() {
+        return protocol + "://" + host + ":" + port;
     }
 
     public String pathsToString() {
@@ -191,12 +195,8 @@ public class URL {
     public String toString() {
         String authority = getAuthority();
         String paths = pathsToString();
-        String params = MapUtils.mapToUrlParams(this.parameters);
+        String params = mapToUrlString(parameters);
         return authority + paths + (StringUtils.isBlank(params) ? "" : "?" + params);
-    }
-
-    public String getAuthority() {
-        return protocol + "://" + host + ":" + port;
     }
 
 }

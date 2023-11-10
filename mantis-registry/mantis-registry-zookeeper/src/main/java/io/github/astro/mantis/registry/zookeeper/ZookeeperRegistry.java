@@ -2,9 +2,9 @@ package io.github.astro.mantis.registry.zookeeper;
 
 import io.github.astro.mantis.common.constant.Constant;
 import io.github.astro.mantis.common.constant.Key;
-import io.github.astro.mantis.configuration.ExporterURL;
+import io.github.astro.mantis.configuration.CallData;
+import io.github.astro.mantis.configuration.RemoteUrl;
 import io.github.astro.mantis.configuration.URL;
-import io.github.astro.mantis.configuration.invoke.Invocation;
 import io.github.astro.mantis.configuration.util.GenerateUtil;
 import io.github.astro.mantis.registry.AbstractRegistry;
 import org.apache.curator.framework.CuratorFramework;
@@ -20,8 +20,10 @@ import java.util.concurrent.TimeUnit;
 public class ZookeeperRegistry extends AbstractRegistry {
 
     private final String servicesDir = Constant.SERVICES_DIR;
+
     // 存储监听器，用于监听URL
     private final Map<String, CuratorCache> curatorCacheMap = new ConcurrentHashMap<>();
+
     private CuratorFramework curatorFramework;
 
     public ZookeeperRegistry(URL url) {
@@ -59,14 +61,14 @@ public class ZookeeperRegistry extends AbstractRegistry {
     }
 
     @Override
-    protected void doRegister(ExporterURL url) {
+    protected void doRegister(RemoteUrl url) {
         String path = servicesDir + GenerateUtil.generateKey(url);
         createNode(path, url.toString());
     }
 
     @Override
-    protected URL doDiscover(Invocation invocation) {
-        String registryPath = servicesDir + GenerateUtil.generateKey(invocation);
+    protected URL doDiscover(CallData callData) {
+        String registryPath = servicesDir + GenerateUtil.generateKey(callData);
         try {
             String urlStr = new String(curatorFramework.getData().forPath(registryPath));
             return URL.valueOf(urlStr);

@@ -1,36 +1,59 @@
 package io.github.astro.mantis.protocol;
 
-import io.github.astro.mantis.common.constant.ProtocolType;
-import io.github.astro.mantis.common.exception.NetWorkException;
+import io.github.astro.mantis.common.constant.Mode;
 import io.github.astro.mantis.configuration.URL;
-import io.github.astro.mantis.configuration.extension.spi.ServiceInterface;
-import io.github.astro.mantis.configuration.invoke.Invocation;
-import io.github.astro.mantis.configuration.invoke.Result;
-import io.github.astro.mantis.transport.Envelope;
-import io.github.astro.mantis.transport.client.Client;
+import io.github.astro.mantis.configuration.spi.ServiceInterface;
+import io.github.astro.mantis.transport.Request;
+import io.github.astro.mantis.transport.Response;
 import io.github.astro.mantis.transport.codec.Codec;
-import io.github.astro.mantis.transport.header.Header;
-import io.github.astro.mantis.transport.server.Server;
 
-import static io.github.astro.mantis.common.constant.ServiceType.Protocol.MANTIS;
+import static io.github.astro.mantis.common.constant.KeyValues.Protocol.MANTIS;
 
+/**
+ * Communication protocol used to exchange data between client and server.
+ */
 @ServiceInterface(MANTIS)
 public interface Protocol {
 
-    ProtocolType getType();
+    /**
+     * The mode of this protocol.
+     *
+     * @return {@link Mode}
+     */
+    Mode getProtocolMode();
 
-    Header createHeader(URL url);
+    /**
+     * Creates a new request for the given URL and message body.
+     *
+     * @param url  the URL to which the request is sent
+     * @param body the message body of the request
+     * @return {@link Request}
+     */
+    Request createRequest(URL url, Object body);
 
-    Codec getCodec(URL url, Class<? extends Envelope> encodeFrom, Class<? extends Envelope> decodeTo);
+    /**
+     * Creates a new response for the given URL and message body.
+     *
+     * @param url  {@link URL}
+     * @param body the message body of the response
+     * @return {@link Response}
+     */
+    Response createResponse(URL url, Object body);
 
-    Server openServer(URL url) throws NetWorkException;
+    /**
+     * Gets Codec used by the server to encode and decode messages for the given URL.
+     *
+     * @param url {@link URL}
+     * @return the codec used by the server
+     */
+    Codec getServerCodec(URL url);
 
-    Client openClient(URL url) throws NetWorkException;
-
-    Result send(URL url, Invocation invocation);
-
-    Server[] getServers();
-
-    Client[] getClients();
+    /**
+     * Gets codec used by the client to encode and decode messages for the given URL.
+     *
+     * @param url {@link URL}
+     * @return the codec used by the client
+     */
+    Codec getClientCodec(URL url);
 
 }

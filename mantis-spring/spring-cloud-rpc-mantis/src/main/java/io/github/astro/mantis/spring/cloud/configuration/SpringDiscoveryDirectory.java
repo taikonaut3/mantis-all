@@ -2,11 +2,11 @@ package io.github.astro.mantis.spring.cloud.configuration;
 
 import io.github.astro.mantis.common.constant.Key;
 import io.github.astro.mantis.common.util.StringUtils;
-import io.github.astro.mantis.configuration.ConsumerInvoker;
-import io.github.astro.mantis.configuration.ExporterURL;
+import io.github.astro.mantis.configuration.CallData;
+import io.github.astro.mantis.configuration.ConsumerCaller;
+import io.github.astro.mantis.configuration.RemoteUrl;
 import io.github.astro.mantis.configuration.URL;
-import io.github.astro.mantis.configuration.extension.spi.ServiceProvider;
-import io.github.astro.mantis.configuration.invoke.Invocation;
+import io.github.astro.mantis.configuration.spi.ServiceProvider;
 import io.github.astro.mantis.configuration.util.GenerateUtil;
 import io.github.astro.mantis.governance.directory.Directory;
 import org.springframework.cloud.client.ServiceInstance;
@@ -16,7 +16,7 @@ import org.springframework.context.ApplicationContext;
 import java.util.List;
 import java.util.Objects;
 
-import static io.github.astro.mantis.common.constant.ServiceType.SPRING;
+import static io.github.astro.mantis.common.constant.KeyValues.SPRING;
 
 @ServiceProvider(SPRING)
 public class SpringDiscoveryDirectory implements Directory {
@@ -31,21 +31,22 @@ public class SpringDiscoveryDirectory implements Directory {
     }
 
     @Override
-    public List<URL> list(Invocation invocation, URL... urls) {
-        List<ServiceInstance> instances = discoveryClient.getInstances(invocation.getApplicationName());
-        ConsumerInvoker invoker = (ConsumerInvoker) invocation.getInvoker();
+    public List<URL> list(CallData callData, URL... urls) {
+        List<ServiceInstance> instances = discoveryClient.getInstances(callData.getApplicationName());
+        ConsumerCaller caller = (ConsumerCaller) callData.getCaller();
         return instances.stream().map(serviceInstance -> {
-            String protocolUrlStr = serviceInstance.getMetadata().get(GenerateUtil.generateMetaProtocolKey(invoker.getProtocol()));
+            String protocolUrlStr = serviceInstance.getMetadata().get(GenerateUtil.generateMetaProtocolKey(caller.getProtocol().name()));
             String wight = serviceInstance.getMetadata().get(Key.REGISTRY_META_WEIGHT);
             if (StringUtils.isBlank(protocolUrlStr)) {
                 return null;
             }
             URL protocolUrl = URL.valueOf(protocolUrlStr);
-            ExporterURL url = new ExporterURL(invoker.getProtocol().getName(), protocolUrl.getAddress());
-            url.setApplicationName(invoker.getApplicationName());
-            url.setExportName(invoker.getExportName());
-            url.setMethodKey(invoker.getMethodKey());
+            RemoteUrl url = new RemoteUrl(caller.getProtocol().name(), protocolUrl.getAddress());
+            url.setApplicationName(caller.getApplicationName());
+            url.setRemoteServiceName(caller.getRemoteServiceName());
+            url.setCallName(caller.getCallName());
             url.addParameter(Key.WEIGHT, wight);
+            url.addParameters(protocolUrl.getParameters());
             return (URL) url;
         }).filter(Objects::nonNull).toList();
     }
@@ -54,4 +55,5 @@ public class SpringDiscoveryDirectory implements Directory {
     public void destroy() {
 
     }
+
 }

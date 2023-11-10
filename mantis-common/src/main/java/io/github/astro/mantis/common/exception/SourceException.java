@@ -1,11 +1,12 @@
 package io.github.astro.mantis.common.exception;
 
 /**
- * rpc参数异常类
+ * Get Resources Exception
  */
-public class SourceException extends IllegalArgumentException {
+public class SourceException extends RpcException {
 
     public SourceException(String msg) {
         super(msg);
     }
+
 }

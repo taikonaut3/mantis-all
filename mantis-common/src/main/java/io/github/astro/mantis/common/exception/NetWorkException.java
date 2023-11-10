@@ -1,6 +1,7 @@
 package io.github.astro.mantis.common.exception;
 
 public class NetWorkException extends RpcException {
+
     public NetWorkException(String msg, Throwable e) {
         super(msg, e);
     }
@@ -12,4 +13,5 @@ public class NetWorkException extends RpcException {
     public NetWorkException(Throwable msg) {
         super(msg);
     }
+
 }

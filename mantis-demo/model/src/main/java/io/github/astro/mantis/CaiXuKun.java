@@ -25,4 +25,5 @@ public class CaiXuKun {
         this.name = name;
         this.age = age;
     }
+
 }

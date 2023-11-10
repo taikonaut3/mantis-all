@@ -1,12 +1,12 @@
 package io.github.astro.mantis.proxy.cglib;
 
-import io.github.astro.mantis.configuration.extension.spi.ServiceProvider;
+import io.github.astro.mantis.configuration.spi.ServiceProvider;
 import io.guthub.astro.mantis.proxy.AbstractProxyFactory;
 import io.guthub.astro.mantis.proxy.InvocationHandler;
 import org.springframework.cglib.proxy.Enhancer;
 import org.springframework.cglib.proxy.MethodInterceptor;
 
-import static io.github.astro.mantis.common.constant.ServiceType.ProxyFactory.CGLIB;
+import static io.github.astro.mantis.common.constant.KeyValues.ProxyFactory.CGLIB;
 
 @ServiceProvider(CGLIB)
 public class CGlibProxyFactory extends AbstractProxyFactory {
@@ -28,4 +28,5 @@ public class CGlibProxyFactory extends AbstractProxyFactory {
         enhancer.setCallback((MethodInterceptor) (obj, method, args, proxy) -> handler.invoke(obj, method, args, () -> proxy.invokeSuper(obj, args)));
         return (T) enhancer.create();
     }
+
 }

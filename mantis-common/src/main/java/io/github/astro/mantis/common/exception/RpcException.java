@@ -13,4 +13,5 @@ public class RpcException extends RuntimeException {
     public RpcException(Throwable msg) {
         super(msg);
     }
+
 }

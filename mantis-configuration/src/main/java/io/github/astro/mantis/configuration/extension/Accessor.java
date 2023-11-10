@@ -15,4 +15,5 @@ public interface Accessor<V> {
     V getData(String key, V defaultValue);
 
     Map<String, V> getAccessor();
+
 }

@@ -22,4 +22,5 @@ public class People implements Serializable {
         this.name = name;
         this.age = age;
     }
+
 }

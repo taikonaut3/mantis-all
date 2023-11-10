@@ -1,8 +1,8 @@
 package io.github.astro.mantis.registry;
 
-import io.github.astro.mantis.configuration.ExporterURL;
+import io.github.astro.mantis.configuration.CallData;
+import io.github.astro.mantis.configuration.RemoteUrl;
 import io.github.astro.mantis.configuration.URL;
-import io.github.astro.mantis.configuration.invoke.Invocation;
 import io.github.astro.mantis.configuration.util.GenerateUtil;
 
 import java.util.Map;
@@ -22,7 +22,7 @@ public abstract class AbstractRegistry implements Registry {
     }
 
     @Override
-    public void register(ExporterURL url) {
+    public void register(RemoteUrl url) {
         String registerKey = GenerateUtil.generateKey(url);
         URL registeredUrl = registeredServices.get(registerKey);
         if (registeredUrl == null) {
@@ -32,11 +32,11 @@ public abstract class AbstractRegistry implements Registry {
     }
 
     @Override
-    public URL discover(Invocation invocation) {
-        String discoverKey = GenerateUtil.generateKey(invocation);
+    public URL discover(CallData callData) {
+        String discoverKey = GenerateUtil.generateKey(callData);
         URL url = discoverServices.get(discoverKey);
         if (url == null) {
-            url = doDiscover(invocation);
+            url = doDiscover(callData);
             if (url != null) {
                 discoverServices.put(discoverKey, url);
                 subscribe(url);
@@ -55,8 +55,8 @@ public abstract class AbstractRegistry implements Registry {
 
     protected abstract void doConnect(URL configuration);
 
-    protected abstract void doRegister(ExporterURL url);
+    protected abstract void doRegister(RemoteUrl url);
 
-    protected abstract URL doDiscover(Invocation invocation);
+    protected abstract URL doDiscover(CallData callData);
 
 }

@@ -8,6 +8,7 @@ import java.util.Map;
  * @Date 2023/5/5 10:14
  */
 public class SerializationOptimizer {
+
     private final Map<String, Class<?>> serializationMap;
 
     public SerializationOptimizer() {
@@ -21,4 +22,5 @@ public class SerializationOptimizer {
     public Class<?> getClass(String className) {
         return serializationMap.get(className);
     }
+
 }

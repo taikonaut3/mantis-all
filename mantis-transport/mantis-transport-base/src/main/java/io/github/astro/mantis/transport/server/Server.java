@@ -6,14 +6,32 @@ import io.github.astro.mantis.transport.channel.Channel;
 import io.github.astro.mantis.transport.endpoint.Endpoint;
 
 import java.net.InetSocketAddress;
-import java.util.Collection;
 
+/**
+ * Network Server
+ */
 public interface Server extends Closeable, Endpoint {
 
+    /**
+     * Binds the server to the specified host and port.
+     *
+     * @throws BindException
+     */
     void bind() throws BindException;
 
-    Collection<Channel> getChannels();
+    /**
+     * Gets all Channel associated with the Server.
+     *
+     * @return
+     */
+    Channel[] getChannels();
 
+    /**
+     * Gets Channel associated with the specified remote address.
+     *
+     * @param remoteAddress
+     * @return
+     */
     Channel getChannel(InetSocketAddress remoteAddress);
 
 }

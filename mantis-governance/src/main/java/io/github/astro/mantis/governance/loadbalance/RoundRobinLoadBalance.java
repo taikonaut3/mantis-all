@@ -1,12 +1,12 @@
 package io.github.astro.mantis.governance.loadbalance;
 
+import io.github.astro.mantis.configuration.CallData;
 import io.github.astro.mantis.configuration.URL;
-import io.github.astro.mantis.configuration.extension.spi.ServiceProvider;
-import io.github.astro.mantis.configuration.invoke.Invocation;
+import io.github.astro.mantis.configuration.spi.ServiceProvider;
 
 import java.util.List;
 
-import static io.github.astro.mantis.common.constant.ServiceType.LoadBalance.ROUND_ROBIN;
+import static io.github.astro.mantis.common.constant.KeyValues.LoadBalance.ROUND_ROBIN;
 
 /**
  * "轮询"负载均衡策略:
@@ -20,10 +20,11 @@ public class RoundRobinLoadBalance extends AbstractLoadBalance {
     private int index = 0;
 
     @Override
-    protected URL doSelect(List<URL> urls, Invocation invocation) {
+    protected URL doSelect(List<URL> urls, CallData callData) {
         if (index == urls.size()) {
             index = 0;
         }
         return urls.get(index++);
     }
+
 }

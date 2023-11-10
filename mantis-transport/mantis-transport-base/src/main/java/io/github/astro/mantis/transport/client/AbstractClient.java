@@ -1,28 +1,35 @@
 package io.github.astro.mantis.transport.client;
 
-import io.github.astro.mantis.common.constant.Constant;
 import io.github.astro.mantis.common.exception.ConnectException;
 import io.github.astro.mantis.common.exception.NetWorkException;
 import io.github.astro.mantis.common.util.NetUtils;
 import io.github.astro.mantis.configuration.URL;
 import io.github.astro.mantis.transport.channel.Channel;
-import io.github.astro.mantis.transport.channel.ChannelHandler;
+import io.github.astro.mantis.transport.channel.ChannelHandlerChain;
 import io.github.astro.mantis.transport.codec.Codec;
-import io.github.astro.mantis.transport.endpoint.AbstractEndpoint;
+import io.github.astro.mantis.transport.endpoint.EndpointAdapter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public abstract class AbstractClient extends AbstractEndpoint implements Client {
+public abstract class AbstractClient extends EndpointAdapter implements Client {
 
     private static final Logger logger = LoggerFactory.getLogger(AbstractClient.class);
-    public int connectTimeout = Constant.DEFAULT_CONNECT_TIMEOUT;
+
+    public int connectTimeout;
+
     protected Channel channel;
-    protected ChannelHandler channelHandler;
+
+    protected ChannelHandlerChain channelHandler;
+
     protected Codec codec;
+
+    protected URL url;
+
     private boolean isInit = false;
 
-    protected AbstractClient(URL url, ChannelHandler channelHandler, Codec codec) throws ConnectException {
+    protected AbstractClient(URL url, ChannelHandlerChain channelHandler, Codec codec) throws ConnectException {
         super(url.getHost(), url.getPort());
+        this.url = url;
         this.channelHandler = channelHandler;
         this.codec = codec;
         try {
@@ -36,6 +43,9 @@ public abstract class AbstractClient extends AbstractEndpoint implements Client 
 
     @Override
     public void connect() throws ConnectException {
+        if (isActive()) {
+            return;
+        }
         // When reconnecting, there is no need to initialize again
         if (!isInit) {
             init();
@@ -70,4 +80,5 @@ public abstract class AbstractClient extends AbstractEndpoint implements Client 
     public String toString() {
         return this.getClass().getSimpleName() + " connect to " + NetUtils.getAddress(toInetSocketAddress());
     }
+
 }

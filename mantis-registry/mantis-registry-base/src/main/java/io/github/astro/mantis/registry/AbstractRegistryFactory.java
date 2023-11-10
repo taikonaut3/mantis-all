@@ -25,4 +25,5 @@ public abstract class AbstractRegistryFactory implements RegistryFactory {
     }
 
     protected abstract Registry create(URL url);
+
 }

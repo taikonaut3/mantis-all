@@ -19,8 +19,6 @@ public abstract class AbstractManager<T> {
         map.remove(name);
     }
 
-    ;
-
     public T get(String name) {
         return map.get(name);
     }
@@ -28,4 +26,5 @@ public abstract class AbstractManager<T> {
     public Map<String, T> getManagerMap() {
         return map;
     }
+
 }

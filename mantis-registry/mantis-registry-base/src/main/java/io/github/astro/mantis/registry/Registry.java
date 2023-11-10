@@ -1,8 +1,8 @@
 package io.github.astro.mantis.registry;
 
-import io.github.astro.mantis.configuration.ExporterURL;
+import io.github.astro.mantis.configuration.CallData;
+import io.github.astro.mantis.configuration.RemoteUrl;
 import io.github.astro.mantis.configuration.URL;
-import io.github.astro.mantis.configuration.invoke.Invocation;
 
 public interface Registry {
 
@@ -10,9 +10,9 @@ public interface Registry {
 
     void connect(URL url);
 
-    void register(ExporterURL url);
+    void register(RemoteUrl url);
 
-    URL discover(Invocation invocation);
+    URL discover(CallData callData);
 
     void subscribe(URL url);
 

@@ -1,8 +1,12 @@
 package io.github.astro.mantis.transport.codec.byteutils;
 
+/**
+ * Tool for Reading bytes
+ */
 public interface ByteReader {
+
     static ByteReader defaultReader(byte[] bytes) {
-        return new SimpleByteReader(bytes);
+        return new DefaultByteReader(bytes);
     }
 
     byte readByte();
@@ -24,7 +28,5 @@ public interface ByteReader {
     byte[] readBytes(int length);
 
     int readableBytes();
-
-    byte[] toBytes();
 
 }

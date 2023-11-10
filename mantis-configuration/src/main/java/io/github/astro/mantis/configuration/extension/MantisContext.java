@@ -1,12 +1,10 @@
 package io.github.astro.mantis.configuration.extension;
 
-import io.github.astro.mantis.common.constant.Key;
-import io.github.astro.mantis.configuration.MantisBootStrap;
-
 import java.util.HashMap;
 import java.util.Map;
 
 public class MantisContext {
+
     private static final ThreadLocal<MantisContext> threadLocal = new ThreadLocal<>();
 
     private Map<String, Object> contextMap;
@@ -22,14 +20,6 @@ public class MantisContext {
             threadLocal.set(context);
         }
         return context;
-    }
-
-    public static MantisBootStrap getCurrentBootStrap() {
-        return (MantisBootStrap) getContext().get(Key.MANTIS_BOOTSTRAP);
-    }
-
-    public static void setCurrentBootStrap(MantisBootStrap mantisBootStrap) {
-        getContext().set(Key.MANTIS_BOOTSTRAP, mantisBootStrap);
     }
 
     public MantisContext set(String key, Object value) {
@@ -54,12 +44,12 @@ public class MantisContext {
         return this;
     }
 
-    public MantisContext clear() {
+    public void clear() {
         contextMap.clear();
-        return this;
     }
 
     public Map<String, Object> getAll() {
         return new HashMap<>(contextMap);
     }
+
 }

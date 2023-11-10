@@ -14,4 +14,5 @@ public interface RegistryListener {
     void listenChanged(URL oldUrl, URL newUrl);
 
     void listenCreated(URL url);
+
 }

@@ -1,11 +1,11 @@
 package io.github.astro.mantis.registry.zookeeper;
 
 import io.github.astro.mantis.configuration.URL;
-import io.github.astro.mantis.configuration.extension.spi.ServiceProvider;
+import io.github.astro.mantis.configuration.spi.ServiceProvider;
 import io.github.astro.mantis.registry.AbstractRegistryFactory;
 import io.github.astro.mantis.registry.Registry;
 
-import static io.github.astro.mantis.common.constant.ServiceType.RegistryFactory.ZOOKEEPER;
+import static io.github.astro.mantis.common.constant.KeyValues.RegistryFactory.ZOOKEEPER;
 
 @ServiceProvider(ZOOKEEPER)
 public class ZookeeperRegistryFactory extends AbstractRegistryFactory {
@@ -14,4 +14,5 @@ public class ZookeeperRegistryFactory extends AbstractRegistryFactory {
     protected Registry create(URL url) {
         return new ZookeeperRegistry(url);
     }
+
 }

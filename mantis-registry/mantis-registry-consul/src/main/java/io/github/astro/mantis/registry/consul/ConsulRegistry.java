@@ -7,9 +7,9 @@ import com.ecwid.consul.v1.agent.model.Self;
 import com.ecwid.consul.v1.kv.model.GetValue;
 import io.github.astro.mantis.common.constant.Constant;
 import io.github.astro.mantis.common.constant.Key;
-import io.github.astro.mantis.configuration.ExporterURL;
+import io.github.astro.mantis.configuration.CallData;
+import io.github.astro.mantis.configuration.RemoteUrl;
 import io.github.astro.mantis.configuration.URL;
-import io.github.astro.mantis.configuration.invoke.Invocation;
 import io.github.astro.mantis.configuration.util.GenerateUtil;
 import io.github.astro.mantis.registry.AbstractRegistry;
 import org.apache.http.client.HttpClient;
@@ -55,7 +55,7 @@ public class ConsulRegistry extends AbstractRegistry {
     }
 
     @Override
-    protected void doRegister(ExporterURL url) {
+    protected void doRegister(RemoteUrl url) {
         String path = Constant.SERVICES_DIR + GenerateUtil.generateKey(url);
         // consul这个客户端不需要 "/" 开头
         String substring = path.substring(1);
@@ -63,8 +63,8 @@ public class ConsulRegistry extends AbstractRegistry {
     }
 
     @Override
-    protected URL doDiscover(Invocation invocation) {
-        Response<GetValue> response = consulClient.getKVValue(Constant.SERVICES_DIR + GenerateUtil.generateKey(invocation));
+    protected URL doDiscover(CallData callData) {
+        Response<GetValue> response = consulClient.getKVValue(Constant.SERVICES_DIR + GenerateUtil.generateKey(callData));
         if (response.getValue() != null) {
             String urlStr = response.getValue().getDecodedValue();
             return URL.valueOf(urlStr);
@@ -91,4 +91,5 @@ public class ConsulRegistry extends AbstractRegistry {
     public void destroy() {
 
     }
+
 }

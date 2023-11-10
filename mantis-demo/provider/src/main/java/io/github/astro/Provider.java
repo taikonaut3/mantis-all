@@ -18,9 +18,9 @@ public class Provider {
     public static void main(String[] args) throws IOException {
 
         SpringApplication.run(Provider.class, args);
-//        DefaultExporter<MyExport> exporter = new DefaultExporter<>(new MyExport());
-//        exporter.setApplicationName("rpc-provider-normal");
-//        exporter.export();
+//        DefaultremoteService<MyExport> remoteService = new DefaultremoteService<>(new MyExport());
+//        remoteService.setApplicationName("rpc-provider-normal");
+//        remoteService.export();
 
         System.in.read();
     }

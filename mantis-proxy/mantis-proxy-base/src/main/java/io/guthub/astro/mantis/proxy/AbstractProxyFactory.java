@@ -23,4 +23,5 @@ public abstract class AbstractProxyFactory implements ProxyFactory {
     protected abstract <T> T doCreateProxy(Class<T> interfaceClass, InvocationHandler handler);
 
     protected abstract <T> T doCreateProxy(T target, InvocationHandler handler);
+
 }

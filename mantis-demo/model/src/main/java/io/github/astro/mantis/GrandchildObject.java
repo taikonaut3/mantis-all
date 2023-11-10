@@ -3,6 +3,7 @@ package io.github.astro.mantis;
 import java.io.Serializable;
 
 public class GrandchildObject implements Serializable {
+
     private String someValue;
 
     // getters 和 setters
@@ -14,4 +15,5 @@ public class GrandchildObject implements Serializable {
     public void setSomeValue(String someValue) {
         this.someValue = someValue;
     }
+
 }

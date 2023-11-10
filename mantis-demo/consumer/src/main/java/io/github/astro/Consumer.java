@@ -3,9 +3,12 @@ package io.github.astro;
 import io.github.astro.mantis.ChildObject;
 import io.github.astro.mantis.GrandchildObject;
 import io.github.astro.mantis.ParentObject;
-import io.github.astro.mantis.configuration.MantisBootStrap;
-import io.github.astro.mantis.rpc.configuration.DefaultRemoteCaller;
+import io.github.astro.mantis.configuration.MantisApplication;
+import io.github.astro.mantis.configuration.spi.ExtensionLoader;
+import io.github.astro.mantis.proxy.jdk.JDKProxyFactory;
+import io.github.astro.mantis.rpc.DefaultRemoteCaller;
 import io.github.astro.mantis.spring.boot.EnableMantis;
+import io.guthub.astro.mantis.proxy.ProxyFactory;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ApplicationContext;
@@ -31,9 +34,8 @@ public class Consumer {
     }
 
     public static MyRpcClient getClientByNormal() {
-        MantisBootStrap mantisBootStrap = new MantisBootStrap();
-        DefaultRemoteCaller<MyRpcClient> remoteCaller = new DefaultRemoteCaller<>(mantisBootStrap, MyRpcClient.class);
-        remoteCaller.setApplicationName("rpc-provider-normal");
+        MantisApplication mantisApplication = new MantisApplication();
+        DefaultRemoteCaller<MyRpcClient> remoteCaller = new DefaultRemoteCaller<>(mantisApplication, MyRpcClient.class);
         return remoteCaller.get();
     }
 
@@ -75,4 +77,25 @@ public class Consumer {
         System.out.println("调用时间为：" + (System.currentTimeMillis() - start));
         System.out.println(parents);
     }
+
+    public static void testProxy() {
+        List<ProxyFactory> proxyFactories = ExtensionLoader.loadServices(ProxyFactory.class);
+        for (ProxyFactory proxyFactory : proxyFactories) {
+            if(proxyFactory instanceof JDKProxyFactory){
+                continue;
+            }
+            long avgTime = 0;
+
+            for (int i = 0; i < 100; i++) {
+                long start = System.currentTimeMillis();
+                MyService proxyObj = proxyFactory.createProxy(new MyService(), (proxy, method, args, superInvoker) -> null);
+                long end = System.currentTimeMillis();
+                long time = end - start;
+                System.out.println(proxyFactory+"单次时间："+time);
+                avgTime = avgTime + time;
+            }
+            System.out.println(proxyFactory + "平均花费时间：" + (avgTime));
+        }
+    }
+
 }

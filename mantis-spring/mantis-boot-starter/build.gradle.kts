@@ -3,10 +3,10 @@ dependencies {
     api(project(":mantis-rpc"))
     //api(project(":mantis-monitor"))
     // spi
-    implementation(project(":mantis-proxy:mantis-proxy-jdk"))
-    implementation(project(":mantis-transport:mantis-transport-netty"))
-    implementation(project(":mantis-protocol:mantis-protocol-mantis"))
-    implementation(project(":mantis-eventhub:mantis-eventhub-disruptor"))
-    implementation(project(":mantis-serialization:mantis-serialization-kryo"))
-    implementation(project(":mantis-registry:mantis-registry-consul"))
+    api(project(":mantis-proxy:mantis-proxy-jdk"))
+    api(project(":mantis-transport:mantis-transport-netty"))
+    api(project(":mantis-protocol:mantis-protocol-mantis"))
+    api(project(":mantis-eventhub:mantis-eventhub-disruptor"))
+    api(project(":mantis-serialization:mantis-serialization-kryo"))
+    api(project(":mantis-registry:mantis-registry-consul"))
 }

@@ -8,6 +8,7 @@ import java.util.concurrent.Flow;
 public class DefaultEventSubscriber<E extends Event<?>> implements Flow.Subscriber<E> {
 
     private final EventListener<E> listener;
+
     private Flow.Subscription subscription;
 
     public DefaultEventSubscriber(EventListener<E> listener) {
@@ -22,7 +23,9 @@ public class DefaultEventSubscriber<E extends Event<?>> implements Flow.Subscrib
 
     @Override
     public void onNext(E event) {
-        listener.onEvent(event);
+        if (listener.check(event)) {
+            listener.onEvent(event);
+        }
         subscription.request(Long.MAX_VALUE);
     }
 
@@ -39,4 +42,5 @@ public class DefaultEventSubscriber<E extends Event<?>> implements Flow.Subscrib
     public void cancel() {
         subscription.cancel();
     }
+
 }

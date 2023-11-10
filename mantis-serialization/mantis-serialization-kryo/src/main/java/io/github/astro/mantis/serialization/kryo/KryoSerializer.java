@@ -4,15 +4,17 @@ import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryo.io.Input;
 import com.esotericsoftware.kryo.io.Output;
 import io.github.astro.mantis.common.exception.SerializationException;
-import io.github.astro.mantis.configuration.extension.spi.ServiceProvider;
+import io.github.astro.mantis.configuration.spi.ServiceProvider;
 import io.github.astro.mantis.serialization.Serializer;
 
-import static io.github.astro.mantis.common.constant.ServiceType.Serializer.KRYO;
+import static io.github.astro.mantis.common.constant.KeyValues.Serialize.KRYO;
 
 @ServiceProvider(value = KRYO)
 public class KryoSerializer implements Serializer {
+
     // Kryo is not thread safe. Each thread should have its own Kryo, Input, and Output instances.
     private static final int BUFFER_SIZE = 4096; // 设置较大的缓冲区大小
+
     private final ThreadLocal<Kryo> kryoThreadLocal = ThreadLocal.withInitial(() -> {
         Kryo kryo = new Kryo();
         kryo.setRegistrationRequired(false);
@@ -39,4 +41,5 @@ public class KryoSerializer implements Serializer {
             throw new SerializationException("Failed to deserialize object", e);
         }
     }
+
 }

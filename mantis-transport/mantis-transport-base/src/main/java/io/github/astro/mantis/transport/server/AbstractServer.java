@@ -4,31 +4,38 @@ import io.github.astro.mantis.common.exception.BindException;
 import io.github.astro.mantis.common.exception.NetWorkException;
 import io.github.astro.mantis.common.util.NetUtils;
 import io.github.astro.mantis.configuration.URL;
-import io.github.astro.mantis.transport.channel.AbstractChannelHandler;
 import io.github.astro.mantis.transport.channel.Channel;
 import io.github.astro.mantis.transport.channel.ChannelHandler;
+import io.github.astro.mantis.transport.channel.ChannelHandlerChain;
 import io.github.astro.mantis.transport.codec.Codec;
-import io.github.astro.mantis.transport.endpoint.AbstractEndpoint;
+import io.github.astro.mantis.transport.endpoint.EndpointAdapter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.net.InetSocketAddress;
-import java.util.Collection;
-import java.util.Map;
 
-public abstract class AbstractServer extends AbstractEndpoint implements Server {
+public abstract class AbstractServer extends EndpointAdapter implements Server {
 
     private static final Logger logger = LoggerFactory.getLogger(AbstractServer.class);
-    protected final Map<String, Channel> channels;
+
+    protected final Channel[] channels;
+
+    protected int soBacklog;
+
     protected ChannelHandler channelHandler;
+
     protected Codec codec;
+
+    protected URL url;
+
     private boolean isInit = false;
 
-    protected AbstractServer(URL url, ChannelHandler channelHandler, Codec codec) throws BindException {
+    protected AbstractServer(URL url, ChannelHandlerChain channelHandler, Codec codec) throws BindException {
         super(url.getHost(), url.getPort());
+        this.url = url;
         this.channelHandler = channelHandler;
         this.codec = codec;
-        this.channels = ((AbstractChannelHandler) channelHandler).getChannels();
+        this.channels = channelHandler.getChannels();
         try {
             bind();
             logger.debug("Create {} is Successful,Bind address: {} for Protocol({})", this.getClass().getSimpleName(), getAddress(), url.getProtocol());
@@ -40,6 +47,9 @@ public abstract class AbstractServer extends AbstractEndpoint implements Server 
 
     @Override
     public void bind() throws BindException {
+        if (isActive()) {
+            return;
+        }
         if (!isInit) {
             init();
             isInit = true;
@@ -70,13 +80,18 @@ public abstract class AbstractServer extends AbstractEndpoint implements Server 
     protected abstract void doClose() throws NetWorkException;
 
     @Override
-    public Collection<Channel> getChannels() {
-        return channels.values();
+    public Channel[] getChannels() {
+        return channels;
     }
 
     @Override
     public Channel getChannel(InetSocketAddress remoteAddress) {
-        return channels.get(NetUtils.getAddress(remoteAddress));
+        for (Channel channel : channels) {
+            if (channel.getAddress().equals(NetUtils.getAddress(remoteAddress))) {
+                return channel;
+            }
+        }
+        return null;
     }
 
 }
