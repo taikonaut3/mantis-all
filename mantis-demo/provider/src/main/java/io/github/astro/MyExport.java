@@ -24,6 +24,7 @@ public class MyExport {
         if (i++ < 3) {
             int i = 1 / 0;
         }
+        int j = 2 / 0;
         return "hello" + word;
     }
 

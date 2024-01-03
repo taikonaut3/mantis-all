@@ -36,7 +36,7 @@ public class DefaultRemoteService<T> extends AbstractCallerContainer implements 
     @Override
     protected void initBefore() {
         AssertUtils.assertNotNull(target);
-        AssertUtils.assertCondition(checkExport(target.getClass()), "remoteService this Method Only support @Export modifier's Object");
+        AssertUtils.assertCondition(checkExport(target.getClass()), "remoteService this Method Only support @RemoteService modifier's Object");
     }
 
     @Override

@@ -55,19 +55,27 @@ public class MantisConfigurationProperties {
     }
 
     public int getWeight() {
-        return mantisApplication.getWeight();
+        return mantisApplication.getAppConfiguration().getWeight();
     }
 
     public void setWeight(int weight) {
-        mantisApplication.setWeight(weight);
+        mantisApplication.getAppConfiguration().setWeight(weight);
+    }
+
+    public void setEventDispatcher(String eventDispatcher) {
+        mantisApplication.getAppConfiguration().setEventDispatcher(eventDispatcher);
+    }
+
+    public String getEventDispatcher() {
+        return mantisApplication.getAppConfiguration().getEventDispatcher();
     }
 
     public String getApplicationName() {
-        return mantisApplication.getApplicationName();
+        return mantisApplication.getAppConfiguration().getApplicationName();
     }
 
     public void setApplicationName(String applicationName) {
-        mantisApplication.setApplicationName(applicationName);
+        mantisApplication.getAppConfiguration().setApplicationName(applicationName);
     }
 
     public MantisApplication getMantisBootStrap() {

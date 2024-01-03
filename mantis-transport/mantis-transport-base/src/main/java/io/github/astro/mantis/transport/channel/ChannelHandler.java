@@ -43,13 +43,19 @@ public interface ChannelHandler {
     void caught(Channel channel, Throwable cause) throws RpcException;
 
     /**
+     * Gets all access Current ChannelHandlerChain's Channel
+     *
+     * @return
+     */
+    Channel[] getChannels();
+
+    /**
      * when a heartbeat is received from the channel.
      *
      * @param channel The channel where the heartbeat occurred.
      * @param event
      */
-    default void heartBeat(Channel channel,Object event){
+    default void heartBeat(Channel channel, Object event) {
 
     }
-
 }

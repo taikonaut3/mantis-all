@@ -1,14 +1,16 @@
 package io.github.astro.mantis.rpc;
 
+import io.github.astro.mantis.Request;
+import io.github.astro.mantis.Response;
 import io.github.astro.mantis.common.constant.Key;
 import io.github.astro.mantis.common.util.DateUtils;
 import io.github.astro.mantis.configuration.CallInterceptor;
 import io.github.astro.mantis.configuration.Caller;
 import io.github.astro.mantis.configuration.DefaultCallData;
+import io.github.astro.mantis.configuration.URL;
 import io.github.astro.mantis.configuration.spi.ExtensionLoader;
 import io.github.astro.mantis.protocol.Protocol;
-import io.github.astro.mantis.transport.Request;
-import io.github.astro.mantis.transport.Response;
+import io.github.astro.mantis.transport.event.RequestEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -20,14 +22,15 @@ public class MantisServerInvoker {
 
     private static final Logger logger = LoggerFactory.getLogger(MantisServerInvoker.class);
 
-    private final Request request;
+    private final RequestEvent requestEvent;
 
-    public MantisServerInvoker(Request request) {
-        this.request = request;
+    public MantisServerInvoker(RequestEvent requestEvent) {
+        this.requestEvent = requestEvent;
     }
 
     public Response invoke() {
-        DefaultCallData callData = (DefaultCallData) request.getBody();
+        Request request = requestEvent.getSource();
+        DefaultCallData callData = (DefaultCallData) requestEvent.getBody();
         Caller caller = callData.getCaller();
         Response response = null;
         try {
@@ -61,8 +64,9 @@ public class MantisServerInvoker {
 
     private Response createResponse(Caller caller, Request request, Object body, byte code) {
         Protocol protocol = ExtensionLoader.loadService(Protocol.class, request.getUrl().getProtocol());
+        URL url = request.getUrl();
+        url.addParameter(Key.SERIALIZE, caller.getSerialize().name());
         Response response = protocol.createResponse(request.getUrl(), body);
-        response.getHeader().addExtendData(Key.SERIALIZE, caller.getSerialize().name());
         response.setId(request.getId());
         response.setCode(code);
         return response;

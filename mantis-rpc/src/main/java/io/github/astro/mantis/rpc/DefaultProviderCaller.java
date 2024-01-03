@@ -13,8 +13,8 @@ import io.github.astro.mantis.configuration.util.GenerateUtil;
 import io.github.astro.mantis.protocol.Protocol;
 import io.github.astro.mantis.registry.Registry;
 import io.github.astro.mantis.registry.RegistryFactory;
-import io.github.astro.mantis.transport.Transporter;
-import io.github.astro.mantis.transport.server.Server;
+import io.github.astro.mantis.transport.server.EndpointServer;
+import io.github.astro.mantis.transport.server.ServerTransport;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -38,7 +38,7 @@ public class DefaultProviderCaller extends AbstractCaller implements ProviderCal
     @Override
     protected void initBefore() {
         AssertUtils.assertCondition(method != null && getRemoteService() != null);
-        AssertUtils.assertCondition(checkInvoke(method), "Only support @Procedure modify Method");
+        AssertUtils.assertCondition(checkInvoke(method), "Only support @Callable modify Method");
     }
 
     @Override
@@ -70,8 +70,8 @@ public class DefaultProviderCaller extends AbstractCaller implements ProviderCal
         // 开启协议端口
         for (RemoteUrl remoteUrl : getRemoteUrls()) {
             Protocol protocol = ExtensionLoader.loadService(Protocol.class, remoteUrl.getProtocol());
-            Transporter transporter = ExtensionLoader.loadService(Transporter.class, remoteUrl.getParameter(Key.TRANSPORT));
-            Server server = transporter.bind(remoteUrl, protocol.getServerCodec(remoteUrl));
+            ServerTransport serverTransport = ExtensionLoader.loadService(ServerTransport.class, remoteUrl.getParameter(Key.TRANSPORT));
+            EndpointServer server = serverTransport.bind(remoteUrl, protocol.getServerCodec(remoteUrl));
         }
     }
 

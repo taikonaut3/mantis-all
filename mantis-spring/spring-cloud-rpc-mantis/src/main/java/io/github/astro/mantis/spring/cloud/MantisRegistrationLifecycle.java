@@ -26,7 +26,7 @@ public class MantisRegistrationLifecycle<R extends Registration> implements Regi
             String key = GenerateUtil.generateMetaProtocolKey(protocolConfig.getType());
             registration.getMetadata().put(key, protocolConfig.toUrl().toString());
         }
-        registration.getMetadata().put(Key.REGISTRY_META_WEIGHT, String.valueOf(mantisApplication.getWeight()));
+        registration.getMetadata().put(Key.REGISTRY_META_WEIGHT, String.valueOf(mantisApplication.getAppConfiguration().getWeight()));
     }
 
     @Override

@@ -60,3 +60,5 @@ include("mantis-demo:model")
 findProject(":mantis-demo:model")?.name = "model"
 include("mantis-proxy:mantis-proxy-bytebuddy")
 findProject(":mantis-proxy:mantis-proxy-bytebuddy")?.name = "mantis-proxy-bytebuddy"
+include("mantis-transport:mantis-transport-http")
+findProject(":mantis-transport:mantis-transport-http")?.name = "mantis-transport-http"

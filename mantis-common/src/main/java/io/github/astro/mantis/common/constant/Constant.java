@@ -16,7 +16,7 @@ public interface Constant {
 
     int DEFAULT_MAX_CONNECT_TIMEOUT = 10 * 1000;
 
-    int DEFAULT_TIMEOUT = 3000;
+    int DEFAULT_TIMEOUT = 30000;
 
     int DEFAULT_HEARTBEAT_INTERVAL = 6000;
 

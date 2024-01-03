@@ -1,6 +1,6 @@
 package io.github.astro.mantis.transport.netty.client;
 
-import io.github.astro.mantis.transport.Response;
+import io.github.astro.mantis.Response;
 import io.github.astro.mantis.transport.channel.ChannelHandler;
 import io.github.astro.mantis.transport.netty.NettyChannel;
 import io.netty.channel.ChannelHandlerContext;

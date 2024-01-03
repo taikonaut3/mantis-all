@@ -50,7 +50,7 @@ public class DefaultRemoteCaller<T> extends AbstractCallerContainer implements R
     protected void initAfter() {
         mantisApplication.addRemoteCaller(this);
         ProxyFactory proxyFactory = ExtensionLoader.loadService(ProxyFactory.class, getProxyMode());
-        proxy = proxyFactory.createProxy(baseOnClass, new InvokerInvocationHandler(this));
+        proxy = proxyFactory.createProxy(baseOnClass, new RpcInvocationHandler(this));
     }
 
     @Override

@@ -2,26 +2,15 @@ package io.github.astro.mantis.transport.client;
 
 import io.github.astro.mantis.common.exception.ConnectException;
 import io.github.astro.mantis.transport.Closeable;
-import io.github.astro.mantis.transport.channel.Channel;
-import io.github.astro.mantis.transport.endpoint.Endpoint;
 
 /**
- * Network client
+ * @Author WenBo Zhou
+ * @Date 2023/12/6 16:48
  */
-public interface Client extends Endpoint, Closeable {
+public interface Client extends Closeable {
 
-    /**
-     * Connects to the server.
-     *
-     * @throws ConnectException
-     */
+
     void connect() throws ConnectException;
 
-    /**
-     * Returns the channel associated.
-     *
-     * @return
-     */
-    Channel getChannel();
-
+    void send(Object message);
 }

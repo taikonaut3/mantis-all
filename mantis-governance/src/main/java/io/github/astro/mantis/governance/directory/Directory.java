@@ -14,7 +14,7 @@ public interface Directory {
     List<URL> list(CallData callData, URL... urls);
 
     /**
-     * 销毁目录
+     * destroy cache
      */
     void destroy();
 

@@ -36,6 +36,14 @@ public class MantisApplication implements Lifecycle {
         configurations = ExtensionLoader.loadServices(ConfigurationMantisApplication.class);
     }
 
+    public void setApplicationName(String applicationName){
+        appConfiguration.setApplicationName(applicationName);
+    }
+
+    public String getApplicationName(){
+        return appConfiguration.getApplicationName();
+    }
+
     public void addRemoteService(RemoteService<?>... remoteServices) {
         for (RemoteService<?> remoteService : remoteServices) {
             configurationManager.getRemoteServiceManager().register(remoteService);
@@ -62,22 +70,6 @@ public class MantisApplication implements Lifecycle {
 
     public void addProcessor(String name, CallInterceptor interceptor) {
         configurationManager.getInterceptorManager().register(name, interceptor);
-    }
-
-    public String getApplicationName() {
-        return appConfiguration.getApplicationName();
-    }
-
-    public void setApplicationName(String applicationName) {
-        appConfiguration.setApplicationName(applicationName);
-    }
-
-    public int getWeight() {
-        return appConfiguration.getWeight();
-    }
-
-    public void setWeight(int weight) {
-        appConfiguration.setWeight(weight);
     }
 
     @Override

@@ -1,8 +1,8 @@
 package io.github.astro.mantis.rpc.listener;
 
+import io.github.astro.mantis.Response;
 import io.github.astro.mantis.configuration.MantisApplication;
 import io.github.astro.mantis.configuration.executor.MantisThreadPool;
-import io.github.astro.mantis.transport.Response;
 import io.github.astro.mantis.transport.ResponseFuture;
 import io.github.astro.mantis.transport.event.EnvelopeEventListener;
 import io.github.astro.mantis.transport.event.ResponseEvent;
@@ -20,12 +20,13 @@ public class ResponseEventListener extends EnvelopeEventListener<ResponseEvent> 
     @Override
     protected void handEnvelopeEvent(ResponseEvent event) {
         logger.debug("Received Event({})", event.getClass().getSimpleName());
-        ResponseFuture future = ResponseFuture.getFuture(event.getId());
+        String id = String.valueOf(event.getSource().getId());
+        ResponseFuture future = ResponseFuture.getFuture(id);
         if (future != null) {
             Response response = event.getSource();
-            future.complete(response.getBody());
+            future.complete(event.getBody());
         } else {
-            logger.error("ResponseFuture({}) Can't exist", event.getId());
+            logger.error("ResponseFuture({}) Can't exist", id);
         }
     }
 

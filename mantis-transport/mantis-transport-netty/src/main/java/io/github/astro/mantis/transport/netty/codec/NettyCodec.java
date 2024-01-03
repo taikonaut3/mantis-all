@@ -1,10 +1,7 @@
 package io.github.astro.mantis.transport.netty.codec;
 
-import io.github.astro.mantis.common.constant.Key;
+import io.github.astro.mantis.code.Codec;
 import io.github.astro.mantis.configuration.URL;
-import io.github.astro.mantis.transport.Envelope;
-import io.github.astro.mantis.transport.Request;
-import io.github.astro.mantis.transport.codec.Codec;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
@@ -27,13 +24,13 @@ public final class NettyCodec {
     public NettyCodec(URL url, Codec codec) {
         this.codec = codec;
         int maxReceiveSize;
-        if (codec.getEncodedClass() == Request.class) {
-            maxReceiveSize = url.getIntParameter(Key.CLIENT_MAX_RECEIVE_SIZE, DEFAULT_MAX_MESSAGE_SIZE);
-        } else {
-            maxReceiveSize = url.getIntParameter(Key.SERVER_MAX_RECEIVE_SIZE, DEFAULT_MAX_MESSAGE_SIZE);
-        }
+//        if (codec.getEncodedClass() == Request.class) {
+//            maxReceiveSize = url.getIntParameter(Key.CLIENT_MAX_RECEIVE_SIZE, DEFAULT_MAX_MESSAGE_SIZE);
+//        } else {
+//            maxReceiveSize = url.getIntParameter(Key.SERVER_MAX_RECEIVE_SIZE, DEFAULT_MAX_MESSAGE_SIZE);
+//        }
         encoder = new NettyEncoder();
-        decoder = new NettyDecoder(maxReceiveSize);
+        decoder = new NettyDecoder(DEFAULT_MAX_MESSAGE_SIZE);
     }
 
     public ChannelHandler getEncoder() {
@@ -44,11 +41,11 @@ public final class NettyCodec {
         return decoder;
     }
 
-    class NettyEncoder extends MessageToByteEncoder<Envelope> {
+    class NettyEncoder extends MessageToByteEncoder<Object> {
 
         @Override
-        protected void encode(ChannelHandlerContext ctx, Envelope envelope, ByteBuf out) throws Exception {
-            byte[] bytes = codec.encode(envelope);
+        protected void encode(ChannelHandlerContext ctx, Object message, ByteBuf out) throws Exception {
+            byte[] bytes = codec.encode(message);
             out.writeInt(bytes.length);
             out.writeBytes(bytes);
         }

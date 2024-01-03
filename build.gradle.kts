@@ -32,6 +32,8 @@ subprojects {
                 dependencies {
                     add("api", project(":mantis-configuration"))
                     add("annotationProcessor", project(":mantis-configuration"))
+                    add("compileOnly",dependency("org.projectlombok:lombok"))
+                    add("annotationProcessor",dependency("org.projectlombok:lombok"))
                 }
             }
             if (!getAllProjects(Common.excludedPublishModules).contains(project)) {

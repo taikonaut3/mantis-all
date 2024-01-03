@@ -1,9 +1,9 @@
 package io.github.astro.mantis.rpc.listener;
 
+import io.github.astro.mantis.Response;
 import io.github.astro.mantis.configuration.MantisApplication;
 import io.github.astro.mantis.configuration.executor.MantisThreadPool;
 import io.github.astro.mantis.rpc.MantisServerInvoker;
-import io.github.astro.mantis.transport.Response;
 import io.github.astro.mantis.transport.event.EnvelopeEventListener;
 import io.github.astro.mantis.transport.event.RequestEvent;
 import org.slf4j.Logger;
@@ -20,7 +20,7 @@ public class RequestEventListener extends EnvelopeEventListener<RequestEvent> {
     @Override
     protected void handEnvelopeEvent(RequestEvent event) {
         logger.debug("Received Event({})", event.getClass().getSimpleName());
-        Response response = new MantisServerInvoker(event.getSource()).invoke();
+        Response response = new MantisServerInvoker(event).invoke();
         if (response != null) {
             event.getChannel().send(response);
         }

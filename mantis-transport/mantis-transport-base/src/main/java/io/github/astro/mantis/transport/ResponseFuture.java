@@ -32,6 +32,10 @@ public class ResponseFuture extends CompletableFuture<Object> {
         whenComplete((resp, ex) -> {
             removeFuture(getId());
         });
+        boolean oneway = url.getBooleanParameter(Key.IS_ONEWAY);
+        if(oneway){
+            complete(null);
+        }
     }
 
     public static void addFuture(String id, ResponseFuture future) {

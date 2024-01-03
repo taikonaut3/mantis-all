@@ -1,11 +1,12 @@
 package io.github.astro.mantis.transport.event;
 
 import io.github.astro.mantis.configuration.MantisApplication;
+import io.github.astro.mantis.event.Event;
 import io.github.astro.mantis.event.EventListener;
 
 import java.util.concurrent.Executor;
 
-public abstract class EnvelopeEventListener<T extends EnvelopeEvent<?>> implements EventListener<T> {
+public abstract class EnvelopeEventListener<T extends Event<?>> implements EventListener<T> {
 
     protected MantisApplication mantisApplication;
 

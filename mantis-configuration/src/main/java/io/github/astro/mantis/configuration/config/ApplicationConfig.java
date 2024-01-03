@@ -14,6 +14,8 @@ public class ApplicationConfig {
 
     private int weight = Constant.DEFAULT_WEIGHT;
 
+    private String eventDispatcher = Constant.DEFAULT_EVENT_DISPATCHER;
+
     public ApplicationConfig() {
 
     }
@@ -21,5 +23,7 @@ public class ApplicationConfig {
     public ApplicationConfig(String applicationName) {
         this.applicationName = applicationName;
     }
+
+
 
 }

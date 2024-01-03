@@ -1,11 +1,8 @@
 package io.github.astro.mantis.protocol;
 
+import io.github.astro.mantis.code.Codec;
 import io.github.astro.mantis.common.constant.Mode;
 import io.github.astro.mantis.configuration.URL;
-import io.github.astro.mantis.transport.Request;
-import io.github.astro.mantis.transport.Response;
-import io.github.astro.mantis.transport.codec.Codec;
-import io.github.astro.mantis.transport.header.Header;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -19,21 +16,12 @@ public abstract class AbstractProtocol implements Protocol {
 
     protected volatile Codec clientCodec;
 
+    protected volatile ProtocolParser protocolParser;
+
     public AbstractProtocol(Mode protocolMode) {
         this.protocolMode = protocolMode;
     }
 
-    @Override
-    public Request createRequest(URL url, Object body) {
-        Header header = createRequestHeader(url);
-        return new Request(header, body);
-    }
-
-    @Override
-    public Response createResponse(URL url, Object body) {
-        Header header = createReponseHeader(url);
-        return new Response(header, body);
-    }
 
     @Override
     public Codec getServerCodec(URL url) {
@@ -61,13 +49,24 @@ public abstract class AbstractProtocol implements Protocol {
         return clientCodec;
     }
 
-    protected abstract Header createRequestHeader(URL url);
-
-    protected abstract Header createReponseHeader(URL url);
+    @Override
+    public ProtocolParser getParser(URL url) {
+        if (protocolParser == null) {
+            synchronized (this) {
+                if (protocolParser == null) {
+                    protocolParser = createProtocolParser(url);
+                    logger.debug("Created protocolParser: {}", protocolParser);
+                }
+            }
+        }
+        return protocolParser;
+    }
 
     protected abstract Codec createServerCodec(URL url);
 
     protected abstract Codec createClientCodec(URL url);
+
+    protected abstract ProtocolParser createProtocolParser(URL url);
 
     @Override
     public Mode getProtocolMode() {

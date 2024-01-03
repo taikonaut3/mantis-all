@@ -5,15 +5,15 @@ import lombok.Getter;
 @Getter
 public class ConfigurationManager {
 
-    private RemoteServiceManager remoteServiceManager;
+    private final RemoteServiceManager remoteServiceManager;
 
-    private RemoteCallerManager remoteCallerManager;
+    private final RemoteCallerManager remoteCallerManager;
 
-    private ProtocolManager protocolManager;
+    private final ProtocolManager protocolManager;
 
-    private RegistryManager registryManager;
+    private final RegistryManager registryManager;
 
-    private CallInterceptorManager interceptorManager;
+    private final CallInterceptorManager interceptorManager;
 
     public ConfigurationManager() {
         remoteServiceManager = new RemoteServiceManager();

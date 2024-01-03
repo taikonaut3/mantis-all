@@ -20,9 +20,11 @@ public class ServerHeartBeatChannelHandler extends HeartBeatChannelHandler {
     @Override
     public void heartBeat(Channel channel, Object event) {
         URL url = (URL) channel.getAttribute(Key.URL);
-        String eventDispatcherKey = url.getParameter(Key.SERVER_EVENT_DISPATCHER, Constant.DEFAULT_EVENT_DISPATCHER);
-        EventDispatcher eventDispatcher = ExtensionLoader.loadService(EventDispatcher.class, eventDispatcherKey);
-        eventDispatcher.dispatchEvent(new HeartBeatEvent(channel));
+        if(url!=null){
+            String eventDispatcherKey = url.getParameter(Key.SERVER_EVENT_DISPATCHER, Constant.DEFAULT_EVENT_DISPATCHER);
+            EventDispatcher eventDispatcher = ExtensionLoader.loadService(EventDispatcher.class, eventDispatcherKey);
+            eventDispatcher.dispatchEvent(new HeartBeatEvent(channel));
+        }
     }
 
 }

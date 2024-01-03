@@ -1,3 +1,3 @@
-dependencies {
-    api(project(":mantis-transport:mantis-transport-base"))
+dependencies{
+    api(project(":mantis-serialization:mantis-serialization-base"))
 }

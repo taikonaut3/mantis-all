@@ -1,19 +1,13 @@
 package io.github.astro.mantis.transport.base;
 
-import io.github.astro.mantis.common.constant.Constant;
+import io.github.astro.mantis.Envelope;
 import io.github.astro.mantis.common.constant.Key;
 import io.github.astro.mantis.common.exception.RpcException;
 import io.github.astro.mantis.common.util.NetUtils;
-import io.github.astro.mantis.common.util.StringUtils;
 import io.github.astro.mantis.configuration.MantisApplication;
-import io.github.astro.mantis.configuration.spi.ExtensionLoader;
-import io.github.astro.mantis.event.EventDispatcher;
-import io.github.astro.mantis.transport.Envelope;
-import io.github.astro.mantis.transport.Request;
 import io.github.astro.mantis.transport.channel.Channel;
 import io.github.astro.mantis.transport.channel.ChannelHandler;
 import io.github.astro.mantis.transport.channel.ChannelHandlerChain;
-import io.github.astro.mantis.transport.event.ChannelHandlerExceptionEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -22,7 +16,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-public class DefaultChannelHandlerChain extends DefaultChannelHandlerAdapter implements ChannelHandlerChain {
+public class DefaultChannelHandlerChain extends ChannelHandlerAdapter implements ChannelHandlerChain {
 
     private static final Logger logger = LoggerFactory.getLogger(DefaultChannelHandlerChain.class);
 
@@ -37,9 +31,6 @@ public class DefaultChannelHandlerChain extends DefaultChannelHandlerAdapter imp
     @Override
     public ChannelHandlerChain addLast(ChannelHandler channelHandler) {
         channelHandlers.add(channelHandler);
-        if (channelHandler instanceof DefaultChannelHandlerAdapter channelHandlerAdapter) {
-            channelHandlerAdapter.setChannelHandlerChain(this);
-        }
         return this;
     }
 
@@ -72,16 +63,11 @@ public class DefaultChannelHandlerChain extends DefaultChannelHandlerAdapter imp
 
     @Override
     public void received(Channel channel, Object message) throws RpcException {
+        if (message instanceof Envelope envelope) {
+            channel.setAttribute(Key.URL, envelope.getUrl());
+        }
         for (ChannelHandler channelHandler : channelHandlers) {
-            try {
-                channelHandler.received(channel, message);
-            } catch (RpcException e) {
-                if (message instanceof Envelope envelope) {
-                    getEventDispatcher(envelope)
-                            .dispatchEvent(new ChannelHandlerExceptionEvent(channelHandler, channel, envelope, e));
-                    break;
-                }
-            }
+            channelHandler.received(channel, message);
         }
     }
 
@@ -100,17 +86,4 @@ public class DefaultChannelHandlerChain extends DefaultChannelHandlerAdapter imp
             channelHandler.heartBeat(channel, event);
         }
     }
-
-    protected EventDispatcher getEventDispatcher(Envelope envelope) {
-        String eventDispatcherKey;
-        if (envelope instanceof Request) {
-            // If the current ProviderCaller does not exist,use default
-            eventDispatcherKey =
-                    StringUtils.isBlankOrDefault(envelope.getHeader().getExtendData(Key.EVENT_DISPATCHER), Constant.DEFAULT_EVENT_DISPATCHER);
-        } else {
-            eventDispatcherKey = envelope.getUrl().getParameter(Key.EVENT_DISPATCHER, Constant.DEFAULT_EVENT_DISPATCHER);
-        }
-        return ExtensionLoader.loadService(EventDispatcher.class, eventDispatcherKey);
-    }
-
 }

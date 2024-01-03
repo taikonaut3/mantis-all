@@ -9,7 +9,6 @@ import io.github.astro.mantis.transport.base.HeartBeatChannelHandler;
 import io.github.astro.mantis.transport.channel.Channel;
 import io.github.astro.mantis.transport.event.HeartBeatEvent;
 
-
 public class ClientHeartBeatChannelHandler extends HeartBeatChannelHandler {
 
     public ClientHeartBeatChannelHandler() {
@@ -20,9 +19,12 @@ public class ClientHeartBeatChannelHandler extends HeartBeatChannelHandler {
     @Override
     public void heartBeat(Channel channel, Object event) {
         URL url = (URL) channel.getAttribute(Key.URL);
-        String eventDispatcherKey = url.getParameter(Key.EVENT_DISPATCHER, Constant.DEFAULT_EVENT_DISPATCHER);
-        EventDispatcher eventDispatcher = ExtensionLoader.loadService(EventDispatcher.class, eventDispatcherKey);
-        eventDispatcher.dispatchEvent(new HeartBeatEvent(channel));
+        if(url!=null){
+            String eventDispatcherKey = url.getParameter(Key.EVENT_DISPATCHER, Constant.DEFAULT_EVENT_DISPATCHER);
+            EventDispatcher eventDispatcher = ExtensionLoader.loadService(EventDispatcher.class, eventDispatcherKey);
+            eventDispatcher.dispatchEvent(new HeartBeatEvent(channel));
+        }
+
     }
 
 }

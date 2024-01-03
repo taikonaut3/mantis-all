@@ -1,9 +1,8 @@
 package io.github.astro.mantis.transport.event;
 
-import io.github.astro.mantis.common.constant.Key;
+import io.github.astro.mantis.Envelope;
 import io.github.astro.mantis.configuration.URL;
 import io.github.astro.mantis.event.AbstractEvent;
-import io.github.astro.mantis.transport.Envelope;
 
 public abstract class EnvelopeEvent<T extends Envelope> extends AbstractEvent<T> {
 
@@ -11,7 +10,7 @@ public abstract class EnvelopeEvent<T extends Envelope> extends AbstractEvent<T>
 
     protected EnvelopeEvent(T envelope) {
         super(envelope);
-        this.url = URL.valueOf(envelope.getHeader().getExtendData(Key.URL));
+        this.url = envelope.getUrl();
 
     }
 
@@ -20,7 +19,7 @@ public abstract class EnvelopeEvent<T extends Envelope> extends AbstractEvent<T>
     }
 
     public String getId() {
-        return getSource().getHeader().getExtendData(Key.UNIQUE_ID);
+        return String.valueOf(getSource().getId());
     }
 
 }

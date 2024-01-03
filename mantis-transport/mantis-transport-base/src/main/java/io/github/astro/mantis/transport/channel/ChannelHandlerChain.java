@@ -19,11 +19,6 @@ public interface ChannelHandlerChain extends ChannelHandler {
      */
     ChannelHandler[] getChannelHandlers();
 
-    /**
-     * Gets all access Current ChannelHandlerChain's Channel
-     *
-     * @return
-     */
-    Channel[] getChannels();
+
 
 }
